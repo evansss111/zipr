@@ -87,12 +87,10 @@ async def think(
             max_tokens=max_tokens,
             system=system,
             messages=[
-                {"role": "user",      "content": prompt},
-                {"role": "assistant", "content": "{"},   # force JSON open
+                {"role": "user", "content": prompt},
             ],
         )
-        # The response continues from '{', so prepend it back
-        text = "{" + resp.content[0].text.strip()
+        text = resp.content[0].text.strip()
         log.debug("Raw response: %.200s", text)
 
         result = _extract_json(text)
