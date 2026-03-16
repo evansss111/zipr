@@ -9,6 +9,7 @@ import logging
 from zipr import ZiprMessage
 from ..think import think
 from ..config import MODEL_KRONOS
+from ..storage import load_canon
 
 log = logging.getLogger("council.kronos")
 
@@ -54,11 +55,32 @@ def register_kronos(bus) -> None:
                 for s in (signals if isinstance(signals, list) else [])
             )
 
+        # Build proven analogues context from the last 10 codified laws
+        canon = load_canon()
+        proven_text = ""
+        if canon:
+            recent_laws = canon[-10:]
+            proven = []
+            for entry in recent_laws:
+                for a in (entry.get("analogues") or []):
+                    era    = a.get("era", "")
+                    domain = a.get("domain", "")
+                    pattern = a.get("pattern", "")
+                    if era and domain and pattern:
+                        proven.append(f"[{era} · {domain}] {pattern}")
+            if proven:
+                proven_text = (
+                    "\n\nThese historical analogues have previously led to codified laws "
+                    "— consider them as proven fruitful territory:\n"
+                    + "\n".join(f"- {p}" for p in proven)
+                )
+
         prompt = (
             f"Modern topic: {topic}\n\n"
             f"Current signals:\n{signal_text or summary}\n\n"
             f"Overall summary: {summary}\n\n"
             "Find historical structural echoes."
+            f"{proven_text}"
         )
 
         result = await think(SYSTEM, prompt, model=MODEL_KRONOS, max_tokens=700)

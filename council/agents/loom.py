@@ -9,7 +9,7 @@ import logging
 from zipr import ZiprMessage, query, task
 from ..think import think
 from ..config import MODEL_LOOM, APPROVAL_THRESHOLD
-from ..storage import save_rejected
+from ..storage import save_rejected, load_canon
 
 log = logging.getLogger("council.loom")
 
@@ -85,11 +85,26 @@ def register_loom(bus) -> None:
             for a in (analogues if isinstance(analogues, list) else [])
         ) if analogues else ""
 
+        # Build canon context — do not duplicate existing laws
+        canon = load_canon()
+        canon_context = ""
+        if canon:
+            recent = canon[-20:]
+            canon_lines = "\n".join(
+                f"{i+1}. {entry.get('law', '')}"
+                for i, entry in enumerate(recent)
+            )
+            canon_context = (
+                "Laws already codified — do not duplicate these, but you may build upon or extend them:\n"
+                f"{canon_lines}\n\n"
+            )
+
         weave_prompt = (
             f"Topic: {topic}\n\n"
             f"Modern signals:\n{signal_text}\n\n"
             f"Historical analogues:\n{analogue_text or 'none found'}\n\n"
             f"Deep pattern from Kronos: {deep_pattern}\n\n"
+            f"{canon_context}"
             "Propose a fundamental law."
         )
 

@@ -6,42 +6,25 @@
 <title>The Eternal Council</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;900&family=Cinzel+Decorative:wght@400;700&family=IM+Fell+English:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400;1,600&family=IBM+Plex+Sans:wght@300;400;500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 <style>
 :root {
-  --marble:       #b8b0a4;
-  --marble-2:     #aea69a;
-  --marble-3:     #a49c90;
-  --marble-4:     #9a9286;
-  --border:       #7a7268;
-  --border-hi:    #504840;
-  --ink:          #080604;
-  --ink-s:        #12100c;
-  --ink-m:        #201c18;
-  --ink-d:        #383028;
-  --gold:         #8a5c08;
-  --gold-bright:  #b07810;
-  --gold-pale:    #d4b060;
-  --terra:        #9a3018;
-  --terra-bright: #c04020;
-  --terra-pale:   #d49080;
-  --aegean:       #163a78;
-  --aegean-mid:   #1e4e98;
-  --aegean-pale:  #7898c8;
-  --laurel:       #1e5030;
-  --laurel-pale:  #80aa90;
-  --purple:       #4a1268;
-  --purple-pale:  #9878b8;
-
-  --gold-dim:    #c4a050;
-  --terracotta:  #b84a2a;
-
-  --herald:  22, 78, 152;
-  --kronos:  74, 18, 104;
-  --loom:    30, 80, 48;
-  --verity:  154, 48, 24;
-  --codex:   138, 92, 8;
+  --bg:      #0f0d0b;
+  --bg2:     #161310;
+  --bg3:     #1d1a16;
+  --border:  #242018;
+  --border2: #322e28;
+  --text:    #ddd4c4;
+  --text2:   #9a8878;
+  --text3:   #5a5048;
+  --amber:   #cc8820;
+  --amber2:  #e0a840;
+  --green:   #4a9060;
+  --red:     #b04030;
+  --red2:    #d87060;
+  --blue:    #4878b0;
+  --purple:  #7858a8;
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -49,1155 +32,1071 @@
 html, body {
   height: 100%;
   overflow: hidden;
-  background: var(--marble);
-  color: var(--ink);
-  font-family: 'IM Fell English', Georgia, serif;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 13px;
+  line-height: 1.5;
 }
 
-::-webkit-scrollbar { width: 5px; }
-::-webkit-scrollbar-track { background: var(--marble-2); }
-::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
-::-webkit-scrollbar-thumb:hover { background: var(--border-hi); }
+/* ─── Scrollbar ─── */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--bg2); }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
 
-/* ── Layout ──────────────────────────────────────────────────── */
-.app {
+/* ─── Layout shell ─── */
+#app {
   display: grid;
-  grid-template-rows: 74px 58px 1fr;
-  height: 100dvh;
-}
-
-.main-area {
-  display: grid;
-  grid-template-columns: minmax(0, 54fr) minmax(0, 46fr);
+  grid-template-rows: 40px 1fr 38px;
+  height: 100vh;
   overflow: hidden;
 }
 
-.feed-panel, .canon-panel { overflow-y: auto; overflow-x: hidden; }
-
-/* ── Greek key border utility ────────────────────────────────── */
-.greek-top {
-  border-top: 1px solid var(--border);
-  position: relative;
-}
-.greek-top::after {
-  content: '';
-  display: block;
-  height: 3px;
-  background:
-    repeating-linear-gradient(90deg,
-      var(--gold) 0, var(--gold) 2px,
-      transparent 2px, transparent 4px,
-      var(--gold) 4px, var(--gold) 6px,
-      transparent 6px, transparent 12px,
-      var(--gold) 12px, var(--gold) 14px,
-      transparent 14px, transparent 18px
-    );
-  opacity: 0.3;
-  margin-top: 2px;
-}
-
-.ornament { color: var(--gold); opacity: 0.6; }
-
-/* ── Header ──────────────────────────────────────────────────── */
-.header {
-  background: linear-gradient(180deg, var(--marble-2) 0%, var(--marble) 100%);
-  border-bottom: 2px solid var(--border);
+/* ─── Top bar ─── */
+#topbar {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 24px;
-  position: relative;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
-}
-.header::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 3px;
-  background: linear-gradient(90deg, var(--terra) 0%, var(--gold) 40%, var(--aegean) 70%, var(--terra) 100%);
-  opacity: 0.7;
-}
-.header::after {
-  content: '';
-  position: absolute;
-  bottom: -1px; left: 10%; right: 10%;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, var(--gold), transparent);
-  animation: aurum 4s ease-in-out infinite;
-}
-@keyframes aurum { 0%,100%{opacity:0.3} 50%{opacity:0.9} }
-
-.logo-wrap {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-}
-.logo-emblem {
-  width: 38px; height: 38px;
-  opacity: 0.85;
-}
-.logo-text-wrap { line-height: 1; }
-.logo-title {
-  font-family: 'Cinzel Decorative', serif;
-  font-size: 13px;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  color: var(--ink);
-  display: block;
-}
-.logo-sub {
-  font-family: 'Cinzel', serif;
-  font-size: 8px;
-  letter-spacing: 0.22em;
-  color: var(--ink-s);
-  text-transform: uppercase;
-  display: block;
-  margin-top: 3px;
-}
-
-.stat-row {
-  display: flex;
-  align-items: center;
-  gap: 0;
-  font-family: 'Cinzel', serif;
-  font-size: 10px;
-  letter-spacing: 0.08em;
-  color: var(--ink-s);
-}
-.stat-item {
   padding: 0 16px;
-  border-left: 1px solid var(--border);
-  text-align: center;
-  line-height: 1.3;
-}
-.stat-item:first-child { border-left: none; }
-.stat-val {
-  display: block;
-  font-family: 'Cinzel', serif;
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--gold);
-  line-height: 1.1;
-}
-.stat-lbl {
-  display: block;
-  font-size: 8px;
-  letter-spacing: 0.18em;
-  color: var(--ink-m);
-  text-transform: uppercase;
-}
-
-.live-indicator {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-family: 'Cinzel', serif;
-  font-size: 9px;
-  letter-spacing: 0.18em;
-  color: var(--ink-s);
-  padding: 0 16px;
-  border-left: 1px solid var(--border);
-}
-.live-flame {
-  font-size: 12px;
-  animation: flicker 2s ease-in-out infinite alternate;
-}
-.live-flame.off { animation: none; opacity: 0.3; }
-@keyframes flicker { 0%{opacity:0.6;transform:scale(0.95)} 100%{opacity:1;transform:scale(1.05)} }
-
-/* ── Agent Bar ───────────────────────────────────────────────── */
-.agent-bar {
-  background: var(--marble-2);
   border-bottom: 1px solid var(--border);
-  display: flex;
-  align-items: center;
-  padding: 0 24px;
-  gap: 0;
-  position: relative;
+  background: var(--bg2);
+  flex-shrink: 0;
+  gap: 12px;
 }
-.agent-bar-label {
-  font-family: 'Cinzel', serif;
-  font-size: 8px;
-  letter-spacing: 0.22em;
-  color: var(--ink-m);
+
+#wordmark {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  color: var(--amber);
   text-transform: uppercase;
-  margin-right: 24px;
   white-space: nowrap;
 }
 
-.agent-seal-wrap {
+#topbar-right {
   display: flex;
   align-items: center;
-  gap: 9px;
-  padding: 0 20px;
-  border-left: 1px solid var(--border);
-}
-.agent-seal-wrap:first-of-type { border-left: none; }
-
-.seal {
-  width: 22px; height: 22px;
-  border-radius: 50%;
-  border: 1.5px solid;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: 'Cinzel', serif;
-  font-size: 8px;
-  font-weight: 600;
-  transition: box-shadow 0.4s ease, border-color 0.4s ease;
-  position: relative;
-  flex-shrink: 0;
-}
-.seal.active {
-  animation: seal-pulse 1.6s ease-in-out infinite;
-}
-@keyframes seal-pulse {
-  0%,100% { box-shadow: 0 0 0 0 currentColor; }
-  50%      { box-shadow: 0 0 10px 3px currentColor; }
-}
-.seal-ring {
-  position: absolute;
-  inset: -4px;
-  border-radius: 50%;
-  border: 1px solid;
-  opacity: 0;
-  transition: opacity 0.3s;
-  animation: none;
-}
-.seal.active .seal-ring {
-  opacity: 0.5;
-  animation: spin-ring 2s linear infinite;
-}
-@keyframes spin-ring { to { transform: rotate(360deg); } }
-
-.agent-seal-name {
-  font-family: 'Cinzel', serif;
+  gap: 16px;
+  font-family: 'IBM Plex Mono', monospace;
   font-size: 9px;
-  letter-spacing: 0.12em;
-  color: var(--ink-s);
-  text-transform: uppercase;
-  transition: color 0.3s;
+  color: var(--text3);
+  white-space: nowrap;
+  overflow: hidden;
+  min-width: 0;
 }
 
-.session-current {
-  margin-left: auto;
-  font-family: 'IM Fell English', serif;
+.live-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--green);
+  flex-shrink: 0;
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+.topbar-stat { color: var(--text2); }
+.topbar-stat span { color: var(--amber2); }
+
+.topbar-topic {
+  font-family: 'IBM Plex Sans', sans-serif;
   font-style: italic;
-  font-size: 11px;
-  color: var(--ink-s);
-  max-width: 320px;
+  font-size: 10px;
+  color: var(--text3);
   overflow: hidden;
   text-overflow: ellipsis;
+  max-width: 280px;
+}
+
+/* ─── Main area ─── */
+#main {
+  display: grid;
+  grid-template-columns: 290px 1fr;
+  overflow: hidden;
+  min-height: 0;
+}
+
+/* ─── Left panel — Dispatch ─── */
+#dispatch {
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid var(--border);
+  overflow: hidden;
+  min-height: 0;
+}
+
+.panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px 7px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg2);
+  flex-shrink: 0;
+}
+
+.panel-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  color: var(--text3);
+  text-transform: uppercase;
+}
+
+.panel-count {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  color: var(--text3);
+}
+
+#feed {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  min-height: 0;
+}
+
+/* ─── Feed message ─── */
+.feed-msg {
+  padding: 7px 10px 7px 12px;
+  border-bottom: 1px solid var(--border);
+  border-left: 2px solid transparent;
+  position: relative;
+  cursor: default;
+}
+
+.feed-msg:hover {
+  background: var(--bg2);
+}
+
+.feed-msg-meta {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-bottom: 3px;
+  flex-wrap: wrap;
+}
+
+.feed-ts {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 8px;
+  color: var(--text3);
+  flex-shrink: 0;
+}
+
+.feed-route {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  flex-shrink: 0;
+}
+
+.feed-badge {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 8px;
+  padding: 1px 5px;
+  border-radius: 3px;
+  color: #fff;
+  flex-shrink: 0;
+  opacity: 0.85;
+}
+
+.feed-body {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 8.5px;
+  color: var(--text2);
+  line-height: 1.45;
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
+/* ─── Law codification event ─── */
+.feed-law {
+  border-left-color: var(--amber) !important;
+  background: rgba(204,136,32,0.04);
+}
+
+.feed-law-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 8px;
+  color: var(--amber);
+  letter-spacing: 0.1em;
+  margin-bottom: 3px;
+}
+
+.feed-law-text {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-style: italic;
+  font-size: 12px;
+  color: var(--text);
+  line-height: 1.5;
+}
+
+/* ─── Right panel — Canon ─── */
+#canon-panel {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-height: 0;
+}
+
+/* ─── Tab bar ─── */
+.tab-bar {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg2);
+  padding: 0 12px;
+  flex-shrink: 0;
+  gap: 0;
+  height: 34px;
+}
+
+.tab {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  color: var(--text3);
+  text-transform: uppercase;
+  padding: 0 12px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: color 0.15s, border-color 0.15s;
+  user-select: none;
   white-space: nowrap;
 }
-.session-current::before {
-  content: '⋯ ';
-  color: var(--gold);
-  opacity: 0.6;
+
+.tab:hover { color: var(--text2); }
+.tab.active {
+  color: var(--amber);
+  border-bottom-color: var(--amber);
 }
 
-/* ── Panel structure ─────────────────────────────────────────── */
-.panel-head {
+.tab-spacer { flex: 1; }
+
+.search-wrap {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 10px 18px 9px;
-  border-bottom: 1px solid var(--border);
-  position: sticky;
-  top: 0;
-  z-index: 10;
 }
-.panel-title-text {
-  font-family: 'Cinzel', serif;
+
+#search-input {
+  background: var(--bg3);
+  border: 1px solid var(--border2);
+  color: var(--text);
+  font-family: 'IBM Plex Mono', monospace;
   font-size: 9px;
-  letter-spacing: 0.22em;
-  color: var(--ink-s);
-  text-transform: uppercase;
-}
-.panel-sub-text {
-  font-family: 'Cinzel', serif;
-  font-size: 8px;
-  color: var(--ink-m);
-  letter-spacing: 0.1em;
-  margin-top: 2px;
-}
-.btn-classical {
-  font-family: 'Cinzel', serif;
-  font-size: 8px;
-  letter-spacing: 0.14em;
-  color: var(--ink-s);
-  background: transparent;
-  border: 1px solid var(--border);
-  border-radius: 2px;
-  padding: 3px 10px;
-  cursor: pointer;
-  text-transform: uppercase;
-  transition: all 0.15s;
-}
-.btn-classical:hover { border-color: var(--border-hi); color: var(--gold); background: var(--marble-3); }
-.btn-classical.toggled { color: var(--gold); border-color: var(--gold); }
-
-/* ── Feed ────────────────────────────────────────────────────── */
-.feed-panel {
-  background: var(--marble-3);
-  border-right: 1px solid var(--border);
-}
-.feed-panel .panel-head { background: var(--marble-3); }
-
-.msg-row {
-  border-left: 2px solid transparent;
-  border-bottom: 1px solid var(--border);
-  padding: 9px 18px 8px 16px;
-  cursor: default;
-  animation: msg-in 0.3s ease-out;
-  transition: background 0.15s;
-}
-.msg-row:hover { background: var(--marble-2); }
-@keyframes msg-in {
-  from { opacity: 0; transform: translateY(-5px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-.msg-head {
-  display: flex;
-  align-items: baseline;
-  gap: 8px;
-  flex-wrap: wrap;
-  margin-bottom: 4px;
-}
-
-.msg-type-lbl {
-  font-family: 'Cinzel', serif;
-  font-size: 7.5px;
-  letter-spacing: 0.18em;
-  font-weight: 600;
-  text-transform: uppercase;
-  padding: 1px 0;
-  flex-shrink: 0;
-}
-.msg-src {
-  font-family: 'Cinzel', serif;
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-}
-.msg-arrow {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 9px;
-  color: var(--ink-d);
-}
-.msg-dst {
-  font-family: 'Cinzel', serif;
-  font-size: 9px;
-  letter-spacing: 0.06em;
-  color: var(--ink-m);
-}
-.msg-ts {
-  margin-left: auto;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 8px;
-  color: var(--ink-d);
-  flex-shrink: 0;
-}
-.msg-body {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 9.5px;
-  color: var(--ink-m);
-  line-height: 1.55;
-  padding-left: 2px;
-  word-break: break-all;
-}
-.msg-ctx {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 8px;
-  color: var(--ink-d);
-  margin-top: 2px;
-  padding-left: 2px;
-}
-
-/* Law proclaimed card in feed */
-.lex-proclamation {
-  margin: 10px 14px;
-  border: 1px solid rgba(201,168,76,0.4);
-  border-top: 2px solid rgba(201,168,76,0.7);
-  background: rgba(201,168,76,0.04);
-  padding: 14px 16px;
-  animation: lex-in 1.5s ease-out forwards;
-  cursor: pointer;
-  position: relative;
-}
-.lex-proclamation::before,
-.lex-proclamation::after {
-  content: '── ✦ ──────────────────────────────────────── ✦ ──';
-  display: block;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 7px;
-  color: rgba(201,168,76,0.35);
-  letter-spacing: 0.05em;
-  overflow: hidden;
-}
-.lex-proclamation::before { margin-bottom: 8px; }
-.lex-proclamation::after  { margin-top: 10px; }
-@keyframes lex-in {
-  0%   { border-color: rgba(201,168,76,0.9); box-shadow: 0 0 24px rgba(201,168,76,0.25); }
-  50%  { border-color: rgba(201,168,76,0.5); box-shadow: 0 0 8px rgba(201,168,76,0.1); }
-  100% { border-color: rgba(201,168,76,0.4); box-shadow: none; }
-}
-.lex-header {
-  font-family: 'Cinzel', serif;
-  font-size: 8px;
-  letter-spacing: 0.22em;
-  color: var(--gold);
-  text-transform: uppercase;
-  margin-bottom: 8px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-.lex-text {
-  font-family: 'IM Fell English', serif;
-  font-style: italic;
-  font-size: 14px;
-  color: var(--ink);
-  line-height: 1.5;
-  margin-bottom: 9px;
-}
-
-/* ── Canon ───────────────────────────────────────────────────── */
-.canon-panel { background: var(--marble-2); }
-.canon-panel .panel-head { background: var(--marble-2); }
-
-.filter-zone {
-  padding: 8px 14px;
-  border-bottom: 1px solid var(--border);
-  background: var(--marble-2);
-  display: flex;
-  gap: 6px;
-}
-.filter-input {
-  flex: 1;
-  background: var(--marble-3);
-  border: 1px solid var(--border);
-  border-radius: 2px;
-  color: var(--ink-s);
-  font-family: 'IM Fell English', serif;
-  font-size: 12px;
-  padding: 4px 10px;
+  padding: 3px 8px;
+  border-radius: 3px;
   outline: none;
+  width: 160px;
   transition: border-color 0.15s;
 }
-.filter-input:focus { border-color: var(--border-hi); }
-.filter-input::placeholder { color: var(--ink-d); font-style: italic; }
-.filter-select {
-  background: var(--marble-3);
-  border: 1px solid var(--border);
-  border-radius: 2px;
-  color: var(--ink-m);
-  font-family: 'Cinzel', serif;
-  font-size: 9px;
-  padding: 4px 8px;
-  outline: none;
-  cursor: pointer;
-  letter-spacing: 0.06em;
-}
 
-.canon-list { padding: 10px 10px 48px; }
+#search-input:focus { border-color: var(--amber); }
+#search-input::placeholder { color: var(--text3); }
 
-/* Tablet / law card */
-.tablet {
-  border: 1px solid var(--border);
-  border-top: 2px solid var(--marble-4);
-  border-radius: 2px;
-  padding: 13px 15px;
-  margin-bottom: 8px;
-  cursor: pointer;
-  transition: all 0.15s;
-  background: var(--marble-3);
-  position: relative;
-}
-.tablet:hover {
-  border-color: var(--border-hi);
-  border-top-color: var(--gold-dim);
-  background: var(--marble-4);
-}
-.tablet.hi-conf { border-top-color: var(--gold); }
-.tablet.new-law { animation: tablet-emerge 1.5s ease-out forwards; }
-@keyframes tablet-emerge {
-  0%   { opacity:0; transform:translateY(-8px); border-top-color:var(--gold); box-shadow:0 0 16px rgba(201,168,76,0.2); }
-  40%  { opacity:1; transform:translateY(0);    border-top-color:var(--gold); }
-  100% { border-top-color:var(--marble-4); box-shadow:none; }
-}
-.tablet.hi-conf.new-law {
-  animation: tablet-emerge-hi 1.5s ease-out forwards;
-}
-@keyframes tablet-emerge-hi {
-  0%   { opacity:0; transform:translateY(-8px); border-top-color:var(--gold-bright); box-shadow:0 0 20px rgba(232,197,106,0.3); }
-  40%  { opacity:1; transform:translateY(0);    border-top-color:var(--gold-bright); }
-  100% { border-top-color:var(--gold); box-shadow:none; }
-}
-
-.tablet-top {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  margin-bottom: 8px;
-}
-.tablet-id {
-  font-family: 'Cinzel', serif;
-  font-size: 9px;
-  font-weight: 600;
-  letter-spacing: 0.14em;
-  color: var(--gold);
-}
-.tablet-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 3px;
-  justify-content: flex-end;
+/* ─── Law list ─── */
+.law-list {
   flex: 1;
-  margin-left: 8px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  min-height: 0;
 }
-.tag {
-  font-family: 'Cinzel', serif;
-  font-size: 7px;
-  letter-spacing: 0.1em;
-  color: var(--ink-d);
-  border: 1px solid var(--border);
-  border-radius: 1px;
-  padding: 1px 5px;
-  text-transform: uppercase;
+
+.law-entry {
+  display: grid;
+  grid-template-columns: 48px 1fr;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  transition: background 0.12s;
 }
-.lex-inscribed {
-  font-family: 'IM Fell English', serif;
-  font-style: italic;
-  font-size: 14px;
-  color: var(--ink);
+
+.law-entry:hover { background: var(--bg2); }
+
+.law-entry.flash-new {
+  animation: law-flash 0.9s ease-out;
+}
+
+@keyframes law-flash {
+  0%   { background: rgba(204,136,32,0.18); }
+  100% { background: transparent; }
+}
+
+.law-num {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  color: var(--text3);
+  padding: 12px 0 12px 14px;
+  line-height: 1;
+  padding-top: 14px;
+  user-select: none;
+}
+
+.law-content {
+  padding: 11px 14px 11px 4px;
+  min-width: 0;
+}
+
+.law-text {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 16px;
+  color: var(--text);
+  line-height: 1.45;
+  margin-bottom: 5px;
+}
+
+.law-text.rejected-text {
+  text-decoration: line-through;
+  color: var(--red);
+}
+
+.law-mechanism {
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 11px;
+  font-weight: 300;
+  color: var(--text2);
   line-height: 1.45;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  margin-bottom: 10px;
+  margin-bottom: 6px;
 }
-.conf-wrap {
+
+.law-meta {
   display: flex;
   align-items: center;
   gap: 8px;
+  flex-wrap: wrap;
 }
-.conf-track {
-  flex: 1;
+
+.conf-bar-wrap {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.conf-bar {
+  width: 48px;
   height: 2px;
-  background: var(--border);
+  background: var(--border2);
   border-radius: 1px;
   overflow: hidden;
 }
-.conf-fill {
+
+.conf-bar-fill {
   height: 100%;
   border-radius: 1px;
-  transition: width 0.9s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: width 0.3s;
 }
+
 .conf-num {
-  font-family: 'Cinzel', serif;
+  font-family: 'IBM Plex Mono', monospace;
   font-size: 9px;
-  color: var(--ink-m);
-  letter-spacing: 0.06em;
-  flex-shrink: 0;
-  width: 30px;
-  text-align: right;
+  color: var(--text3);
 }
 
-/* Tab buttons */
-.tab-btn {
-  font-family: 'Cinzel', serif;
-  font-size: 8.5px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--ink-d);
-  background: transparent;
-  border: none;
-  padding: 5px 12px;
-  cursor: pointer;
-  transition: all 0.15s;
-}
-.tab-btn:hover { color: var(--ink-m); background: var(--marble-4); }
-.tab-btn.active { color: var(--gold); background: var(--marble-4); }
-
-/* Rejected tablet */
-.rejected-tablet {
-  border-top-color: rgba(184,74,42,0.5) !important;
-  background: rgba(184,74,42,0.04);
-}
-.rejected-tablet:hover { border-color: rgba(184,74,42,0.5); border-top-color: var(--terracotta) !important; }
-.rejected-badge {
-  font-family: 'Cinzel', serif;
-  font-size: 7px;
-  letter-spacing: 0.14em;
-  color: var(--terracotta);
-  border: 1px solid rgba(184,74,42,0.35);
-  padding: 1px 6px;
-  border-radius: 1px;
-  text-transform: uppercase;
-  margin-left: auto;
-}
-.rejection-reason {
-  font-family: 'IM Fell English', serif;
-  font-style: italic;
-  font-size: 12px;
-  color: rgba(184,74,42,0.7);
-  margin-top: 5px;
-  line-height: 1.5;
-  border-left: 2px solid rgba(184,74,42,0.25);
-  padding-left: 8px;
-}
-
-/* ── Detail Scroll ───────────────────────────────────────────── */
-.detail-veil {
-  position: fixed;
-  inset: 0;
-  background: rgba(12, 10, 7, 0.8);
-  z-index: 40;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.25s;
-}
-.detail-veil.open { opacity: 1; pointer-events: all; }
-
-.detail-scroll {
-  position: fixed;
-  top: 0; right: 0;
-  width: min(500px, 100vw);
-  height: 100dvh;
-  background: var(--marble-2);
-  border-left: 1px solid var(--border);
-  z-index: 50;
-  transform: translateX(100%);
-  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-}
-.detail-scroll.open { transform: translateX(0); }
-
-.scroll-head {
-  padding: 16px 20px;
-  border-bottom: 1px solid var(--border);
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  position: sticky;
-  top: 0;
-  background: var(--marble-2);
-  z-index: 1;
-}
-.scroll-head::after {
-  content: '';
-  position: absolute;
-  bottom: -1px; left: 0; right: 0;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, var(--gold-dim), transparent);
-}
-.close-btn {
-  width: 26px; height: 26px;
-  display: flex; align-items: center; justify-content: center;
-  cursor: pointer;
-  color: var(--ink-m);
-  font-size: 14px;
-  border: 1px solid transparent;
-  border-radius: 2px;
-  transition: all 0.15s;
-  flex-shrink: 0;
-  margin-top: 2px;
-}
-.close-btn:hover { border-color: var(--border-hi); color: var(--ink); }
-
-.scroll-body { padding: 22px 20px; flex: 1; }
-.scroll-section { margin-bottom: 24px; }
-.scroll-label {
-  font-family: 'Cinzel', serif;
-  font-size: 7.5px;
-  letter-spacing: 0.22em;
-  color: var(--ink-d);
-  text-transform: uppercase;
-  padding-bottom: 6px;
-  margin-bottom: 10px;
-  border-bottom: 1px solid var(--border);
-  position: relative;
-}
-.scroll-label::after {
-  content: ' ✦';
-  color: var(--gold-dim);
-  opacity: 0.5;
-}
-.scroll-lex {
-  font-family: 'IM Fell English', serif;
-  font-style: italic;
-  font-size: 18px;
-  color: var(--ink);
-  line-height: 1.55;
-}
-.scroll-prose {
-  font-family: 'IM Fell English', serif;
-  font-size: 14px;
-  color: var(--ink-s);
-  line-height: 1.65;
-}
-.scroll-prediction {
-  font-family: 'IM Fell English', serif;
-  font-size: 14px;
-  color: #93c5fd;
-  line-height: 1.65;
-  font-style: italic;
-}
-.evidence-entry {
-  font-family: 'IM Fell English', serif;
-  font-size: 13px;
-  color: var(--ink-m);
-  padding: 6px 0;
-  border-bottom: 1px solid var(--border);
-  display: flex;
-  gap: 10px;
-  line-height: 1.5;
-}
-.evidence-entry::before { content: '·'; color: var(--gold-dim); flex-shrink: 0; }
-.analogue-stone {
-  border: 1px solid var(--border);
-  border-left: 3px solid rgba(139,108,196,0.5);
-  padding: 9px 13px;
-  margin-bottom: 6px;
-  background: var(--marble-3);
-}
-.analogue-era {
-  font-family: 'Cinzel', serif;
+.topic-tag {
+  font-family: 'IBM Plex Mono', monospace;
   font-size: 8px;
-  letter-spacing: 0.14em;
-  color: rgba(139,108,196,0.8);
-  margin-bottom: 4px;
-  text-transform: uppercase;
-}
-.analogue-txt {
-  font-family: 'IM Fell English', serif;
-  font-size: 13px;
-  color: var(--ink-m);
-  line-height: 1.5;
+  padding: 1px 6px;
+  border-radius: 2px;
+  background: var(--bg3);
+  color: var(--text3);
+  border: 1px solid var(--border2);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 120px;
 }
 
-/* Transcript */
-.transcript-veil {
+.rejected-reason {
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-style: italic;
+  font-size: 10px;
+  color: var(--red2);
+  margin-top: 4px;
+  line-height: 1.4;
+}
+
+/* ─── Void states ─── */
+.void-state {
+  padding: 48px 24px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  color: var(--text3);
+  text-align: center;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* ─── Agent bar (bottom) ─── */
+#agentbar {
+  display: flex;
+  border-top: 1px solid var(--border);
+  background: var(--bg2);
+  flex-shrink: 0;
+  height: 38px;
+}
+
+.agent-cell {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  border-right: 1px solid var(--border);
+  padding: 0 8px;
+  transition: background 0.2s;
+}
+
+.agent-cell:last-child { border-right: none; }
+.agent-cell.agent-active { background: var(--bg3); }
+
+.agent-pip {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.agent-active .agent-pip {
+  animation: pip-pulse 1.2s ease-in-out infinite;
+}
+
+@keyframes pip-pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50%       { transform: scale(1.5); opacity: 0.7; }
+}
+
+.agent-name {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 8px;
+  letter-spacing: 0.12em;
+  color: var(--text3);
+  text-transform: uppercase;
+}
+
+.agent-active-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 8px;
+  color: var(--text2);
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.agent-active .agent-active-label { opacity: 1; }
+
+/* ─── Detail panel ─── */
+#overlay {
   position: fixed;
   inset: 0;
-  z-index: 60;
-  background: rgba(8, 6, 4, 0.97);
+  background: rgba(15,13,11,0.7);
+  z-index: 100;
+  transition: opacity 0.2s;
+}
+
+#detail-panel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 500px;
+  height: 100vh;
+  background: var(--bg2);
+  border-left: 1px solid var(--border2);
+  z-index: 101;
   display: flex;
   flex-direction: column;
-  transform: translateY(100%);
-  transition: transform 0.3s ease;
+  overflow: hidden;
+  transition: transform 0.25s cubic-bezier(0.4,0,0.2,1);
 }
-.transcript-veil.open { transform: translateY(0); }
-.transcript-head {
-  padding: 12px 20px;
-  border-bottom: 1px solid var(--border);
-  background: var(--marble-2);
+
+.detail-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  padding: 12px 16px 11px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+  gap: 10px;
 }
+
+.detail-id {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  color: var(--amber);
+  letter-spacing: 0.06em;
+}
+
+.rejected-badge {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 8px;
+  padding: 2px 7px;
+  border-radius: 3px;
+  background: rgba(176,64,48,0.2);
+  color: var(--red2);
+  border: 1px solid var(--red);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.detail-date {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  color: var(--text3);
+  flex: 1;
+  text-align: right;
+}
+
+.detail-close {
+  background: none;
+  border: none;
+  color: var(--text3);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 14px;
+  cursor: pointer;
+  padding: 0 2px;
+  line-height: 1;
+  transition: color 0.15s;
+  flex-shrink: 0;
+}
+
+.detail-close:hover { color: var(--text); }
+
+.detail-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+  min-height: 0;
+}
+
+.detail-section {
+  margin-bottom: 18px;
+}
+
+.detail-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 8px;
+  letter-spacing: 0.14em;
+  color: var(--text3);
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+.detail-law-text {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 20px;
+  color: var(--text);
+  line-height: 1.45;
+}
+
+.detail-mechanism {
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 300;
+  color: var(--text2);
+  line-height: 1.6;
+}
+
+.detail-prediction {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-style: italic;
+  font-size: 14px;
+  color: var(--blue);
+  line-height: 1.55;
+}
+
+.detail-conf {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.detail-conf-bar {
+  flex: 1;
+  height: 2px;
+  background: var(--border2);
+  border-radius: 1px;
+  overflow: hidden;
+}
+
+.detail-conf-fill {
+  height: 100%;
+  border-radius: 1px;
+}
+
+.detail-conf-num {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  color: var(--text2);
+  flex-shrink: 0;
+}
+
+.detail-evidence {
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 12px;
+  color: var(--text2);
+  line-height: 1.6;
+}
+
+.detail-evidence li {
+  list-style: none;
+  padding-left: 12px;
+  position: relative;
+  margin-bottom: 3px;
+}
+
+.detail-evidence li::before {
+  content: '—';
+  position: absolute;
+  left: 0;
+  color: var(--text3);
+}
+
+.analogue-block {
+  border: 1px solid var(--border2);
+  border-left: 2px solid var(--purple);
+  padding: 8px 10px;
+  margin-bottom: 8px;
+  border-radius: 2px;
+}
+
+.analogue-era {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  color: var(--purple);
+  letter-spacing: 0.08em;
+  margin-bottom: 4px;
+}
+
+.analogue-pattern {
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 11px;
+  color: var(--text2);
+  line-height: 1.5;
+}
+
+.analogue-echo {
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-style: italic;
+  font-size: 10px;
+  color: var(--text3);
+  margin-top: 3px;
+  line-height: 1.45;
+}
+
+.detail-signals {
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 11px;
+  color: var(--text2);
+  line-height: 1.55;
+}
+
+.detail-signals li {
+  list-style: none;
+  padding-left: 12px;
+  position: relative;
+  margin-bottom: 3px;
+}
+
+.detail-signals li::before {
+  content: '—';
+  position: absolute;
+  left: 0;
+  color: var(--text3);
+}
+
+.verity-ruling {
+  border-left: 2px solid var(--red);
+  padding: 8px 10px;
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-style: italic;
+  font-size: 12px;
+  color: var(--red2);
+  line-height: 1.55;
+}
+
+.counterexample-list {
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 11px;
+  color: var(--red2);
+  line-height: 1.55;
+}
+
+.counterexample-list li {
+  list-style: none;
+  padding-left: 12px;
+  position: relative;
+  margin-bottom: 3px;
+}
+
+.counterexample-list li::before {
+  content: '—';
+  position: absolute;
+  left: 0;
+  color: var(--red);
+}
+
+.detail-session {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.detail-session-id {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  color: var(--text3);
+  flex: 1;
+}
+
+.transcript-btn {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 8px;
+  padding: 3px 9px;
+  border-radius: 3px;
+  border: 1px solid var(--border2);
+  background: none;
+  color: var(--text2);
+  cursor: pointer;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transition: border-color 0.15s, color 0.15s;
+}
+
+.transcript-btn:hover {
+  border-color: var(--amber);
+  color: var(--amber);
+}
+
+/* ─── Transcript overlay ─── */
+#transcript-overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--bg);
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transform: translateY(100%);
+  transition: transform 0.28s cubic-bezier(0.4,0,0.2,1);
+}
+
+#transcript-overlay.open { transform: translateY(0); }
+
+.transcript-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.transcript-title {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  color: var(--text3);
+  text-transform: uppercase;
+}
+
+.transcript-close {
+  background: none;
+  border: none;
+  color: var(--text3);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 14px;
+  cursor: pointer;
+  padding: 0 2px;
+  transition: color 0.15s;
+}
+
+.transcript-close:hover { color: var(--text); }
+
 .transcript-body {
   flex: 1;
   overflow-y: auto;
-  padding: 12px 18px;
-  font-family: 'JetBrains Mono', monospace;
+  padding: 12px 16px;
+  font-family: 'IBM Plex Mono', monospace;
   font-size: 10px;
-  background: transparent;
-}
-.tx-wire {
-  padding: 4px 0;
-  border-bottom: 1px solid #0e0b07;
-  line-height: 1.55;
-  color: var(--ink-m);
-  word-break: break-all;
+  line-height: 1.7;
+  color: var(--text3);
 }
 
-/* Empty / skeleton */
-.void {
-  padding: 52px 24px;
-  text-align: center;
-  color: var(--ink-d);
-  font-family: 'IM Fell English', serif;
-  font-style: italic;
-  font-size: 14px;
-  line-height: 1.8;
-}
-.void-mark { font-size: 22px; opacity: 0.25; margin-bottom: 14px; }
-.skel {
-  border-radius: 2px;
-  background: linear-gradient(90deg, var(--marble-3) 0%, var(--marble-4) 50%, var(--marble-3) 100%);
-  background-size: 200%;
-  animation: skel-shim 1.8s infinite;
-}
-@keyframes skel-shim { from{background-position:200% 0} to{background-position:-200% 0} }
+.transcript-line { margin-bottom: 2px; }
 </style>
 </head>
-
 <body>
-<div class="app" x-data="council()" x-init="init()">
+<div id="app" x-data="council()">
 
-  <!-- ── HEADER ─────────────────────────────────────────────────── -->
-  <header class="header">
-    <div class="logo-wrap">
-      <!-- Ionic column emblem -->
-      <svg class="logo-emblem" viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <ellipse cx="19" cy="7" rx="10" ry="2.5" stroke="#c9a84c" stroke-width="1" fill="none" opacity="0.8"/>
-        <line x1="12" y1="7" x2="10" y2="31" stroke="#c9a84c" stroke-width="1" opacity="0.7"/>
-        <line x1="26" y1="7" x2="28" y2="31" stroke="#c9a84c" stroke-width="1" opacity="0.7"/>
-        <line x1="9" y1="31" x2="29" y2="31" stroke="#c9a84c" stroke-width="1.5" opacity="0.8"/>
-        <line x1="6"  y1="34" x2="32" y2="34" stroke="#c9a84c" stroke-width="1.5" opacity="0.6"/>
-        <circle cx="19" cy="19" r="3" stroke="#c9a84c" stroke-width="0.75" fill="rgba(201,168,76,0.1)" opacity="0.8"/>
-        <line x1="9" y1="4.5" x2="29" y2="4.5" stroke="#c9a84c" stroke-width="0.5" opacity="0.4"/>
-      </svg>
-      <div class="logo-text-wrap">
-        <span class="logo-title">The Eternal Council</span>
-        <span class="logo-sub">Chronicling the Laws of Human Progress</span>
-      </div>
+  <!-- ─── Top bar ─── -->
+  <div id="topbar">
+    <div id="wordmark">Eternal Council</div>
+    <div id="topbar-right">
+      <div class="live-dot"></div>
+      <div class="topbar-stat"><span x-text="laws.length"></span> laws</div>
+      <div class="topbar-stat"><span x-text="stats.session_count || 0"></span> sessions</div>
+      <div class="topbar-stat" x-text="uptimeStr()"></div>
+      <div class="topbar-topic" x-text="currentTopic ? '↳ ' + currentTopic : ''" x-show="currentTopic"></div>
     </div>
-
-    <div class="stat-row">
-      <div class="live-indicator">
-        <span class="live-flame" :class="{ off: !streaming }">🔥</span>
-        <span x-text="streaming ? 'Convened' : 'Adjourned'"></span>
-      </div>
-      <div class="stat-item">
-        <span class="stat-val" x-text="uptime"></span>
-        <span class="stat-lbl">In Session</span>
-      </div>
-      <div class="stat-item">
-        <span class="stat-val" x-text="stats.session_count"></span>
-        <span class="stat-lbl">Deliberations</span>
-      </div>
-      <div class="stat-item">
-        <span class="stat-val" x-text="stats.law_count"></span>
-        <span class="stat-lbl">Laws Codified</span>
-      </div>
-      <div class="stat-item">
-        <span class="stat-val" x-text="msgPerMin"></span>
-        <span class="stat-lbl">Dispatches / Min</span>
-      </div>
-    </div>
-  </header>
-
-  <!-- ── AGENT STATUS BAR ───────────────────────────────────────── -->
-  <div class="agent-bar">
-    <span class="agent-bar-label">The Five</span>
-
-    <template x-for="agent in agents" :key="agent.name">
-      <div class="agent-seal-wrap" :title="agent.status">
-        <div class="seal"
-             :id="`seal-${agent.name}`"
-             :class="{ active: activeAgent === agent.name }"
-             :style="`
-               color: rgba(${agent.rgb}, ${activeAgent === agent.name ? 1 : 0.35});
-               border-color: rgba(${agent.rgb}, ${activeAgent === agent.name ? 0.8 : 0.25});
-               box-shadow: ${activeAgent === agent.name ? '0 0 12px rgba('+agent.rgb+',0.4)' : 'none'};
-             `">
-          <span x-text="agent.initial"></span>
-          <div class="seal-ring"
-               :style="`border-color: rgba(${agent.rgb}, 0.4)`"></div>
-        </div>
-        <span class="agent-seal-name"
-              :style="activeAgent === agent.name ? `color: rgb(${agent.rgb})` : ''"
-              x-text="agent.latin"></span>
-      </div>
-    </template>
-
-    <div class="session-current" x-show="stats.current_session"
-         x-text="stats.current_session?.topic"></div>
   </div>
 
-  <!-- ── MAIN AREA ──────────────────────────────────────────────── -->
-  <div class="main-area">
+  <!-- ─── Main area ─── -->
+  <div id="main">
 
-    <!-- Live Transmission Feed -->
-    <div class="feed-panel">
-      <div class="panel-head">
-        <div>
-          <div class="panel-title-text">Live Transmissions</div>
-          <div class="panel-sub-text" x-text="`${messages.length} dispatches recorded`"></div>
-        </div>
-        <div style="display:flex;gap:6px;">
-          <button class="btn-classical" :class="{ toggled: paused }" @click="togglePause"
-                  x-text="paused ? `Resume (${buffered.length})` : 'Pause'"></button>
-          <button class="btn-classical" @click="messages = []">Clear</button>
-        </div>
+    <!-- ─── Left: Dispatch ─── -->
+    <div id="dispatch">
+      <div class="panel-header">
+        <div class="panel-label">Dispatch</div>
+        <div class="panel-count" x-text="messages.length + ' msgs'"></div>
       </div>
+      <div id="feed">
+        <template x-for="m in messages" :key="m.id">
+          <div class="feed-msg"
+               :class="m.isLaw ? 'feed-law' : ''"
+               :style="m.isLaw ? '' : 'border-left-color: rgb(' + agentRgb(m.src) + ')'">
 
-      <div id="feed-list" style="padding-bottom:40px;">
-        <div class="void" x-show="messages.length === 0">
-          <div class="void-mark">◈</div>
-          The council has not yet convened.<br>
-          <span style="font-size:12px;color:var(--ink-d);">Dispatches will appear here as the agents deliberate.</span>
-        </div>
-
-        <template x-for="msg in messages" :key="msg._key">
-
-          <!-- Law proclamation card -->
-          <template x-if="msg.isLawCard">
-            <div class="lex-proclamation" @click="openLawById(msg.lawId)">
-              <div class="lex-header">
-                <span>Lex Aeterna</span>
-                <span x-text="msg.lawId"></span>
-                <span style="margin-left:auto;font-size:8px;color:var(--ink-d);" x-text="msg.time"></span>
+            <!-- Law codification event -->
+            <template x-if="m.isLaw">
+              <div>
+                <div class="feed-law-label" x-text="'codified · ' + (m.lawId || '')"></div>
+                <div class="feed-law-text" x-text="m.lawText"></div>
               </div>
-              <div class="lex-text" x-text="msg.lawText"></div>
-              <div class="conf-wrap" style="max-width:240px;">
-                <div class="conf-track" style="flex:1;">
-                  <div class="conf-fill"
-                       :style="`width:${(msg.confidence||0)*100}%; background:${confColor(msg.confidence||0)}`"></div>
+            </template>
+
+            <!-- Regular message -->
+            <template x-if="!m.isLaw">
+              <div>
+                <div class="feed-msg-meta">
+                  <span class="feed-ts" x-text="m.ts"></span>
+                  <span class="feed-route"
+                        :style="'color: rgb(' + agentRgb(m.src) + ')'"
+                        x-text="m.src + ' → ' + m.dst"></span>
+                  <span class="feed-badge"
+                        :style="'background: rgba(' + typeRgb(m.type) + ',0.25); color: rgb(' + typeRgb(m.type) + ')'"
+                        x-text="m.typeName"></span>
                 </div>
-                <span style="font-family:'Cinzel',serif;font-size:9px;color:var(--ink-m);"
-                      x-text="(msg.confidence||0).toFixed(2)"></span>
-                <template x-for="tag in (msg.tags||[]).slice(0,2)" :key="tag">
-                  <span class="tag" x-text="tag"></span>
-                </template>
-              </div>
-            </div>
-          </template>
-
-          <!-- Regular ZIPR dispatch -->
-          <template x-if="!msg.isLawCard">
-            <div class="msg-row"
-                 :style="`border-left-color: rgba(${agentRgb(msg.src)}, 0.65)`">
-              <div class="msg-head">
-                <span class="msg-type-lbl" :style="`color:${typeColor(msg.type)}`" x-text="typeLabel(msg.type)"></span>
-                <span class="msg-src" :style="`color:rgb(${agentRgb(msg.src)})`" x-text="msg.src?.toUpperCase()"></span>
-                <span class="msg-arrow">──▶</span>
-                <span class="msg-dst"
-                      :style="msg.dst === '*' ? 'color:rgba(201,168,76,0.8)' : `color:rgba(${agentRgb(msg.dst)},0.65)`"
-                      x-text="msg.dst === '*' ? 'OMNES' : msg.dst?.toUpperCase()"></span>
-                <span class="msg-ts" x-text="msg.time"></span>
-              </div>
-              <div class="msg-body" x-text="msg.bodyStr"></div>
-              <div class="msg-ctx" x-show="msg.ctxStr" x-text="`⟩ ${msg.ctxStr}`"></div>
-            </div>
-          </template>
-
-        </template>
-      </div>
-    </div>
-
-    <!-- Canon of Laws -->
-    <div class="canon-panel">
-      <div class="panel-head">
-        <div style="display:flex;gap:0;border:1px solid var(--border);border-radius:2px;overflow:hidden;">
-          <button class="tab-btn" :class="{active: canonTab==='canon'}" @click="canonTab='canon'">
-            Canon <span x-text="laws.length ? `(${laws.length})` : ''"></span>
-          </button>
-          <button class="tab-btn" :class="{active: canonTab==='rejected'}" @click="canonTab='rejected'"
-                  style="border-left:1px solid var(--border);">
-            Rejected <span x-text="rejected.length ? `(${rejected.length})` : ''"></span>
-          </button>
-        </div>
-        <select class="filter-select" x-show="canonTab==='canon'" x-model="lawTagFilter">
-          <template x-for="tag in allTags" :key="tag">
-            <option :value="tag" x-text="tag === 'all' ? 'All Domains' : tag"></option>
-          </template>
-        </select>
-      </div>
-
-      <div class="filter-zone" x-show="canonTab==='canon'">
-        <input class="filter-input" type="text" x-model="lawFilter" placeholder="Search the canon…">
-      </div>
-
-      <div class="canon-list" x-show="canonTab==='canon'">
-
-        <!-- Skeleton -->
-        <template x-if="!lawsLoaded">
-          <div>
-            <template x-for="i in [1,2,3]" :key="i">
-              <div class="tablet" style="pointer-events:none;">
-                <div class="skel" style="height:9px;width:44px;margin-bottom:12px;"></div>
-                <div class="skel" style="height:14px;width:100%;margin-bottom:5px;"></div>
-                <div class="skel" style="height:14px;width:68%;margin-bottom:12px;"></div>
-                <div class="skel" style="height:2px;width:100%;"></div>
+                <div class="feed-body" x-text="m.body"></div>
               </div>
             </template>
           </div>
         </template>
+        <div class="void-state" x-show="messages.length === 0">waiting for signals…</div>
+      </div>
+    </div>
 
-        <!-- Void state -->
-        <div class="void" x-show="lawsLoaded && laws.length === 0">
-          <div class="void-mark">Λ</div>
-          No laws have yet been codified.<br>
-          <span style="font-size:12px;">The council deliberates…</span>
+    <!-- ─── Right: Canon ─── -->
+    <div id="canon-panel">
+      <!-- Tab bar -->
+      <div class="tab-bar">
+        <div class="tab" :class="tab === 'canon' ? 'active' : ''" @click="tab = 'canon'">
+          Canon (<span x-text="laws.length"></span>)
         </div>
-
-        <div class="void" x-show="lawsLoaded && laws.length > 0 && filteredLaws.length === 0">
-          No inscriptions match your search.
+        <div class="tab" :class="tab === 'rejected' ? 'active' : ''" @click="tab = 'rejected'">
+          Rejected (<span x-text="rejected.length"></span>)
         </div>
+        <div class="tab-spacer"></div>
+        <div class="search-wrap" x-show="tab === 'canon'">
+          <input id="search-input" type="text" placeholder="search laws…"
+                 x-model="searchQuery" autocomplete="off" spellcheck="false">
+        </div>
+      </div>
 
-        <template x-for="law in filteredLaws" :key="law.id">
-          <div class="tablet"
-               :class="{ 'hi-conf': law.confidence >= 0.75, 'new-law': newLawIds.has(law.id) }"
-               @click="openLaw(law)">
-            <div class="tablet-top">
-              <span class="tablet-id" x-text="law.id"></span>
-              <div class="tablet-tags">
-                <template x-for="tag in (law.tags||[]).slice(0,3)" :key="tag">
-                  <span class="tag" x-text="tag"></span>
+      <!-- Canon list -->
+      <div class="law-list" x-show="tab === 'canon'">
+        <template x-for="(law, i) in filteredLaws" :key="law.id">
+          <div class="law-entry" :id="'law-' + law.id" @click="openDetail(law)">
+            <div class="law-num" x-text="'#' + String(i+1).padStart(2,'0')"></div>
+            <div class="law-content">
+              <div class="law-text" x-text="law.law"></div>
+              <div class="law-mechanism" x-text="law.mechanism" x-show="law.mechanism"></div>
+              <div class="law-meta">
+                <div class="conf-bar-wrap">
+                  <div class="conf-bar">
+                    <div class="conf-bar-fill"
+                         :style="'width:' + Math.round((law.confidence||0)*100) + '%; background:' + confColor(law.confidence||0)"></div>
+                  </div>
+                  <div class="conf-num" x-text="Math.round((law.confidence||0)*100) + '%'"></div>
+                </div>
+                <template x-if="law.topic">
+                  <span class="topic-tag" x-text="law.topic.length > 22 ? law.topic.slice(0,22) + '…' : law.topic"></span>
                 </template>
               </div>
             </div>
-            <div class="lex-inscribed" x-text="law.law"></div>
-            <div class="conf-wrap">
-              <div class="conf-track">
-                <div class="conf-fill"
-                     :style="`width:${(law.confidence||0)*100}%; background:${confColor(law.confidence||0)}`"></div>
-              </div>
-              <span class="conf-num" x-text="(law.confidence||0).toFixed(2)"></span>
-            </div>
           </div>
         </template>
-
+        <div class="void-state" x-show="laws.length === 0" style="pointer-events:none">no laws codified yet</div>
+        <div class="void-state" x-show="laws.length > 0 && filteredLaws.length === 0" style="pointer-events:none">no results</div>
       </div>
 
-      <!-- Rejected laws panel -->
-      <div class="canon-list" x-show="canonTab==='rejected'">
-
-        <div class="void" x-show="rejected.length === 0" style="pointer-events:none;">
-          <div class="void-mark" style="color:var(--terra);opacity:0.6;">✕</div>
-          <span style="color:var(--ink-s);">No laws have been rejected yet.</span><br>
-          <span style="font-size:12px;color:var(--ink-m);">Rejected proposals will appear here after a session runs.</span>
-        </div>
-
-        <template x-for="law in rejected" :key="law.rejected_id">
-          <div class="tablet rejected-tablet"
-               :class="{ 'new-law': newRejectedIds.has(law.rejected_id) }"
-               @click="openLaw(law)">
-            <div class="tablet-top">
-              <span class="tablet-id" style="color:var(--terracotta);" x-text="law.rejected_id"></span>
-              <span class="rejected-badge" x-text="law.stage === 'verity' ? 'Verity' : 'Threshold'"></span>
-            </div>
-            <div class="lex-inscribed" style="color:var(--ink-s);text-decoration:line-through;text-decoration-color:rgba(184,74,42,0.4);"
-                 x-text="law.law"></div>
-            <div class="rejection-reason" x-show="law.verdict_reason" x-text="law.verdict_reason"></div>
-            <div class="conf-wrap" style="margin-top:8px;">
-              <div class="conf-track">
-                <div class="conf-fill"
-                     :style="`width:${(law.confidence||0)*100}%; background:var(--terracotta)`"></div>
+      <!-- Rejected list -->
+      <div class="law-list" x-show="tab === 'rejected'">
+        <template x-for="(law, i) in rejected" :key="law.rejected_id || law.id || i">
+          <div class="law-entry" @click="openDetail(law, true)">
+            <div class="law-num" x-text="'#' + String(i+1).padStart(2,'0')"></div>
+            <div class="law-content">
+              <div class="law-text rejected-text" x-text="law.law"></div>
+              <div class="law-mechanism" x-text="law.mechanism" x-show="law.mechanism"></div>
+              <div class="rejected-reason" x-text="law.verdict_reason" x-show="law.verdict_reason"></div>
+              <div class="law-meta" style="margin-top:4px">
+                <div class="conf-bar-wrap">
+                  <div class="conf-bar">
+                    <div class="conf-bar-fill"
+                         :style="'width:' + Math.round((law.confidence||0)*100) + '%; background:' + confColor(law.confidence||0)"></div>
+                  </div>
+                  <div class="conf-num" x-text="Math.round((law.confidence||0)*100) + '%'"></div>
+                </div>
+                <template x-if="law.topic">
+                  <span class="topic-tag" x-text="law.topic.length > 22 ? law.topic.slice(0,22) + '…' : law.topic"></span>
+                </template>
               </div>
-              <span class="conf-num" style="color:var(--terracotta);" x-text="(law.confidence||0).toFixed(2)"></span>
             </div>
           </div>
         </template>
-
+        <div class="void-state" x-show="rejected.length === 0" style="pointer-events:none">no rejections yet</div>
       </div>
     </div>
   </div>
 
-  <!-- ── LAW DETAIL SCROLL ───────────────────────────────────────── -->
-  <div class="detail-veil" :class="{ open: showDetail }" @click.self="closeDetail()"></div>
+  <!-- ─── Agent bar ─── -->
+  <div id="agentbar">
+    <template x-for="ag in agents" :key="ag.name">
+      <div class="agent-cell" :class="ag.active ? 'agent-active' : ''">
+        <div class="agent-pip"
+             :style="'background: rgb(' + agentRgb(ag.name) + '); box-shadow: ag.active ? \"0 0 6px rgb(\" + agentRgb(ag.name) + \")\" : \"none\"'">
+        </div>
+        <div class="agent-name" x-text="ag.name"></div>
+        <div class="agent-active-label">active</div>
+      </div>
+    </template>
+  </div>
 
-  <div class="detail-scroll" :class="{ open: showDetail }">
-    <template x-if="selectedLaw">
+  <!-- ─── Detail panel overlay ─── -->
+  <div id="overlay"
+       x-show="selectedLaw !== null"
+       x-transition:enter="transition ease-out duration-200"
+       x-transition:enter-start="opacity-0"
+       x-transition:enter-end="opacity-100"
+       x-transition:leave="transition ease-in duration-150"
+       x-transition:leave-start="opacity-100"
+       x-transition:leave-end="opacity-0"
+       @click="closeDetail()"
+       style="display:none">
+  </div>
+
+  <div id="detail-panel"
+       :style="selectedLaw !== null ? 'transform:translateX(0)' : 'transform:translateX(100%)'"
+       x-show="selectedLaw !== null"
+       style="display:none; transform:translateX(100%)">
+
+    <template x-if="selectedLaw !== null">
       <div style="display:contents">
-        <div class="scroll-head">
-          <div>
-            <div style="display:flex;align-items:center;gap:8px;">
-              <span style="font-family:'Cinzel',serif;font-size:12px;font-weight:600;letter-spacing:0.1em;color:var(--gold);"
-                    x-text="selectedLaw.id || selectedLaw.rejected_id"></span>
-              <span x-show="selectedLaw.rejected_id"
-                    style="font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.14em;color:var(--terra);border:1px solid rgba(154,48,24,0.4);padding:1px 6px;border-radius:1px;text-transform:uppercase;">
-                Rejected
-              </span>
-            </div>
-            <div style="font-family:'Cinzel',serif;font-size:8px;color:var(--ink-m);margin-top:3px;letter-spacing:0.12em;"
-                 x-text="(selectedLaw.codified_at || selectedLaw.rejected_at || '').slice(0,10)"></div>
+        <div class="detail-header">
+          <div class="detail-id" x-text="selectedLaw.id || selectedLaw.rejected_id || '—'"></div>
+          <div class="rejected-badge" x-show="isRejected">rejected</div>
+          <div class="detail-date"
+               x-text="(selectedLaw.codified_at || selectedLaw.rejected_at || '').slice(0,10)">
           </div>
-          <button class="close-btn" @click="closeDetail()">✕</button>
+          <button class="detail-close" @click="closeDetail()">✕</button>
         </div>
 
-        <div class="scroll-body">
+        <div class="detail-body">
 
-          <div class="scroll-section">
-            <div class="scroll-label">Lex</div>
-            <div class="scroll-lex" x-text="selectedLaw.law"></div>
+          <!-- Law -->
+          <div class="detail-section">
+            <div class="detail-label">Law</div>
+            <div class="detail-law-text" x-text="selectedLaw.law"></div>
           </div>
 
-          <div class="scroll-section">
-            <div class="scroll-label">Mechanism</div>
-            <div class="scroll-prose" x-text="selectedLaw.mechanism"></div>
+          <!-- Mechanism -->
+          <div class="detail-section" x-show="selectedLaw.mechanism">
+            <div class="detail-label">Mechanism</div>
+            <div class="detail-mechanism" x-text="selectedLaw.mechanism"></div>
           </div>
 
-          <div class="scroll-section">
-            <div class="scroll-label">Prophecy</div>
-            <div class="scroll-prediction" x-text="selectedLaw.prediction"></div>
+          <!-- Prediction -->
+          <div class="detail-section" x-show="selectedLaw.prediction">
+            <div class="detail-label">Prediction</div>
+            <div class="detail-prediction" x-text="selectedLaw.prediction"></div>
           </div>
 
-          <div class="scroll-section">
-            <div class="scroll-label">Confidence</div>
-            <div style="display:flex;align-items:center;gap:12px;">
-              <div class="conf-track" style="flex:1;">
-                <div class="conf-fill" :style="`width:${(selectedLaw.confidence||0)*100}%; background:${confColor(selectedLaw.confidence||0)}`"></div>
+          <!-- Confidence -->
+          <div class="detail-section">
+            <div class="detail-label">Confidence</div>
+            <div class="detail-conf">
+              <div class="detail-conf-bar">
+                <div class="detail-conf-fill"
+                     :style="'width:' + Math.round((selectedLaw.confidence||0)*100) + '%; background:' + confColor(selectedLaw.confidence||0)">
+                </div>
               </div>
-              <span style="font-family:'Cinzel',serif;font-size:13px;font-weight:600;"
-                    :style="`color:${confColor(selectedLaw.confidence||0)}`"
-                    x-text="(selectedLaw.confidence||0).toFixed(2)"></span>
+              <div class="detail-conf-num" x-text="Math.round((selectedLaw.confidence||0)*100) + '%'"></div>
             </div>
           </div>
 
-          <div class="scroll-section" x-show="(selectedLaw.tags||[]).length">
-            <div class="scroll-label">Domains</div>
-            <div style="display:flex;flex-wrap:wrap;gap:5px;">
-              <template x-for="tag in selectedLaw.tags||[]" :key="tag">
-                <span class="tag" style="font-size:9px;padding:3px 9px;" x-text="tag"></span>
+          <!-- Evidence -->
+          <div class="detail-section" x-show="selectedLaw.evidence && selectedLaw.evidence.length">
+            <div class="detail-label">Evidence</div>
+            <ul class="detail-evidence">
+              <template x-for="e in (selectedLaw.evidence || [])" :key="e">
+                <li x-text="e"></li>
               </template>
-            </div>
+            </ul>
           </div>
 
-          <div class="scroll-section" x-show="(selectedLaw.evidence||[]).length">
-            <div class="scroll-label">Evidence</div>
-            <template x-for="(ev,i) in selectedLaw.evidence||[]" :key="i">
-              <div class="evidence-entry" x-text="ev"></div>
-            </template>
-          </div>
-
-          <div class="scroll-section" x-show="(selectedLaw.analogues||[]).length">
-            <div class="scroll-label">Historical Echo · Kronos</div>
-            <template x-for="(a,i) in selectedLaw.analogues||[]" :key="i">
-              <div class="analogue-stone" x-show="a">
-                <div class="analogue-era" x-text="typeof a==='object' ? `${a.era||''} · ${a.domain||''}` : ''"></div>
-                <div class="analogue-txt" x-text="typeof a==='object' ? (a.structural_echo||a.pattern||a) : a"></div>
+          <!-- Kronos: Historical Analogues -->
+          <div class="detail-section" x-show="selectedLaw.analogues && selectedLaw.analogues.length">
+            <div class="detail-label">Historical Analogues</div>
+            <template x-for="a in (selectedLaw.analogues || [])" :key="a.era + a.domain">
+              <div class="analogue-block">
+                <div class="analogue-era" x-text="(a.era || '') + ' · ' + (a.domain || '')"></div>
+                <div class="analogue-pattern" x-text="a.pattern"></div>
+                <div class="analogue-echo" x-text="a.structural_echo" x-show="a.structural_echo"></div>
               </div>
             </template>
           </div>
 
-          <div class="scroll-section" x-show="(selectedLaw.signals||[]).length">
-            <div class="scroll-label">Signals · Herald</div>
-            <template x-for="(s,i) in selectedLaw.signals||[]" :key="i">
-              <div class="evidence-entry" x-text="typeof s==='object'?(s.signal||s.title||s):s"></div>
-            </template>
+          <!-- Herald: Signals -->
+          <div class="detail-section" x-show="selectedLaw.signals && selectedLaw.signals.length">
+            <div class="detail-label">Signals</div>
+            <ul class="detail-signals">
+              <template x-for="s in (selectedLaw.signals || [])" :key="s.title || s.signal">
+                <li x-text="(s.title ? s.title + ': ' : '') + (s.signal || '')"></li>
+              </template>
+            </ul>
           </div>
 
-          <div class="scroll-section" x-show="selectedLaw.verdict_reason">
-            <div class="scroll-label" style="color:var(--terra);">Veritas Ruled</div>
-            <div style="font-family:'IM Fell English',serif;font-style:italic;font-size:14px;color:var(--terra);line-height:1.6;border-left:3px solid rgba(154,48,24,0.3);padding-left:10px;"
-                 x-text="selectedLaw.verdict_reason"></div>
+          <!-- Verity's Ruling (rejected only) -->
+          <div class="detail-section" x-show="isRejected && selectedLaw.verdict_reason">
+            <div class="detail-label">Verity's Ruling</div>
+            <div class="verity-ruling" x-text="selectedLaw.verdict_reason"></div>
           </div>
 
-          <div class="scroll-section" x-show="(selectedLaw.counterexamples||[]).length">
-            <div class="scroll-label" style="color:var(--terra);">Counterexamples</div>
-            <template x-for="(ex,i) in selectedLaw.counterexamples||[]" :key="i">
-              <div class="evidence-entry" style="color:var(--terra);border-bottom-color:rgba(154,48,24,0.15);" x-text="ex"></div>
-            </template>
+          <!-- Counterexamples (rejected only) -->
+          <div class="detail-section" x-show="isRejected && selectedLaw.counterexamples && selectedLaw.counterexamples.length">
+            <div class="detail-label">Counterexamples</div>
+            <ul class="counterexample-list">
+              <template x-for="c in (selectedLaw.counterexamples || [])" :key="c">
+                <li x-text="c"></li>
+              </template>
+            </ul>
           </div>
 
-          <div class="scroll-section">
-            <div class="scroll-label">Session Record</div>
-            <div style="display:flex;align-items:center;justify-content:space-between;">
-              <span style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.08em;color:var(--ink-m);"
-                    x-text="selectedLaw.session"></span>
-              <button class="btn-classical" @click="openTranscript(selectedLaw.session)">View Transcript</button>
+          <!-- Session -->
+          <div class="detail-section" x-show="selectedLaw.session">
+            <div class="detail-label">Session</div>
+            <div class="detail-session">
+              <div class="detail-session-id" x-text="selectedLaw.session"></div>
+              <button class="transcript-btn"
+                      @click="openTranscript(selectedLaw.session)">transcript</button>
             </div>
-            <div style="font-family:'IM Fell English',serif;font-size:12px;color:var(--ink-d);margin-top:5px;font-style:italic;"
-                 x-text="selectedLaw.topic"></div>
           </div>
 
         </div>
@@ -1205,228 +1104,323 @@ html, body {
     </template>
   </div>
 
-  <!-- ── TRANSCRIPT ─────────────────────────────────────────────── -->
-  <div class="transcript-veil" :class="{ open: showTranscript }">
-    <div class="transcript-head">
-      <div>
-        <div style="font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.18em;color:var(--ink-m);">Session Transcript</div>
-        <div style="font-family:'Cinzel',serif;font-size:8px;color:var(--ink-d);margin-top:2px;letter-spacing:0.1em;"
-             x-text="transcriptSession"></div>
-      </div>
-      <button class="close-btn" @click="showTranscript=false">✕</button>
+  <!-- ─── Transcript overlay ─── -->
+  <div id="transcript-overlay" :class="transcriptOpen ? 'open' : ''">
+    <div class="transcript-topbar">
+      <div class="transcript-title" x-text="'Transcript · ' + (transcriptSessionId || '')"></div>
+      <button class="transcript-close" @click="closeTranscript()">✕</button>
     </div>
-    <div class="transcript-body">
-      <div class="void" x-show="transcriptLines.length === 0">Loading…</div>
-      <template x-for="(line,i) in transcriptLines" :key="i">
-        <div class="tx-wire"
-             :style="line.startsWith('{') ? 'color:var(--ink-d);font-style:italic' : wireColor(line)"
+    <div class="transcript-body" id="transcript-body">
+      <template x-for="(line, i) in transcriptLines" :key="i">
+        <div class="transcript-line"
+             :style="'color:' + wireColor(line)"
              x-text="line"></div>
       </template>
+      <div class="void-state" x-show="transcriptLines.length === 0">loading…</div>
     </div>
   </div>
 
-</div>
+</div><!-- #app -->
 
-<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 <script>
-document.addEventListener('alpine:init', () => {
-  Alpine.data('council', () => ({
-    streaming: false,
-    paused: false,
-    _evtSource: null,
-    messages: [],
-    buffered: [],
-    _msgKey: 0,
-    laws: [],
-    rejected: [],
-    lawsLoaded: false,
-    canonTab: 'canon',   // 'canon' | 'rejected'
-    lawFilter: '',
-    lawTagFilter: 'all',
-    newLawIds: new Set(),
-    newRejectedIds: new Set(),
+function council() {
+  return {
+    // ── State ────────────────────────────────────────────────
+    messages:    [],
+    laws:        [],
+    rejected:    [],
+    stats:       {},
+    tab:         'canon',
+    searchQuery: '',
     selectedLaw: null,
-    showDetail: false,
-    showTranscript: false,
-    transcriptSession: '',
-    transcriptLines: [],
-    activeAgent: null,
+    isRejected:  false,
+    currentTopic: '',
+    msgId:       0,
+
+    transcriptOpen:      false,
+    transcriptSessionId: '',
+    transcriptLines:     [],
+
     agents: [
-      { name: 'herald', latin: 'Mercurius', initial: 'M', rgb: '74,143,204',  status: 'idle' },
-      { name: 'kronos', latin: 'Kronos',    initial: 'K', rgb: '139,108,196', status: 'idle' },
-      { name: 'loom',   latin: 'Textor',    initial: 'T', rgb: '74,170,122',  status: 'idle' },
-      { name: 'verity', latin: 'Veritas',   initial: 'V', rgb: '184,74,42',   status: 'idle' },
-      { name: 'codex',  latin: 'Codex',     initial: 'C', rgb: '201,168,76',  status: 'idle' },
+      { name: 'herald', active: false },
+      { name: 'kronos', active: false },
+      { name: 'loom',   active: false },
+      { name: 'verity', active: false },
+      { name: 'codex',  active: false },
     ],
-    stats: { law_count:0, session_count:0, uptime_seconds:0, current_session:null },
-    _msgTs: [],
-    _uptimeTimer: null,
 
+    _agentTimers: {},
+    _es: null,
+
+    // ── Computed ─────────────────────────────────────────────
     get filteredLaws() {
-      const q = this.lawFilter.toLowerCase();
-      return this.laws.filter(l => {
-        const t = !q || (l.law||'').toLowerCase().includes(q) || (l.mechanism||'').toLowerCase().includes(q);
-        const g = this.lawTagFilter==='all' || (l.tags||[]).includes(this.lawTagFilter);
-        return t && g;
-      });
-    },
-    get allTags() {
-      const s = new Set(['all']);
-      this.laws.forEach(l => (l.tags||[]).forEach(t => s.add(t)));
-      return Array.from(s);
-    },
-    get uptime() {
-      const n = this.stats.uptime_seconds;
-      const d=Math.floor(n/86400), h=Math.floor((n%86400)/3600), m=Math.floor((n%3600)/60);
-      if(d) return `${d}d ${h}h`;
-      if(h) return `${h}h ${m}m`;
-      return `${m}m`;
-    },
-    get msgPerMin() {
-      const c = Date.now()-60000;
-      return this._msgTs.filter(t=>t>c).length;
+      if (!this.searchQuery.trim()) return this.laws;
+      const q = this.searchQuery.toLowerCase();
+      return this.laws.filter(l =>
+        (l.law || '').toLowerCase().includes(q) ||
+        (l.mechanism || '').toLowerCase().includes(q) ||
+        (l.topic || '').toLowerCase().includes(q)
+      );
     },
 
+    // ── Init ─────────────────────────────────────────────────
     init() {
-      this.fetchLaws();
-      this.connect();
-      this._uptimeTimer = setInterval(()=>{ this.stats.uptime_seconds++; }, 1000);
-      setInterval(()=>this.fetchStats(), 30000);
+      this.loadInitialData();
+      this.connectSSE();
     },
 
-    async fetchLaws() {
+    async loadInitialData() {
       try {
-        const [laws, rejected] = await Promise.all([
-          fetch('/api/laws').then(r => r.json()),
-          fetch('/api/rejected').then(r => r.json()),
+        const [lawsRes, rejRes, statsRes] = await Promise.all([
+          fetch('/api/laws'),
+          fetch('/api/rejected'),
+          fetch('/api/stats'),
         ]);
-        this.laws = laws;
-        this.rejected = rejected;
-      } catch(e){}
-      this.lawsLoaded = true;
-    },
-    async fetchStats() {
-      try { this.stats = await (await fetch('/api/stats')).json(); } catch(e){}
-    },
-
-    connect() {
-      if(this._evtSource) this._evtSource.close();
-      this._evtSource = new EventSource('/api/stream');
-      this._evtSource.addEventListener('zipr',     e => { this.streaming=true; const d=JSON.parse(e.data); this._onWire(d.wire,d.ts); });
-      this._evtSource.addEventListener('law',      e => this._onNewLaw(JSON.parse(e.data)));
-      this._evtSource.addEventListener('rejected', e => this._onRejected(JSON.parse(e.data)));
-      this._evtSource.addEventListener('stats',    e => { this.stats={...this.stats,...JSON.parse(e.data)}; });
-      this._evtSource.addEventListener('session',  e => { const d=JSON.parse(e.data); if(d.type==='start') this.stats.current_session=d; if(d.type==='end') this.stats.current_session=null; });
-      this._evtSource.addEventListener('heartbeat',() => { this.streaming=true; });
-      this._evtSource.onerror = () => { this.streaming=false; setTimeout(()=>this.connect(),3000); };
-      this._evtSource.onopen  = () => { this.streaming=true; };
+        this.laws     = (await lawsRes.json())   || [];
+        this.rejected = (await rejRes.json())    || [];
+        this.stats    = (await statsRes.json())  || {};
+        if (this.stats.current_session) {
+          this.currentTopic = this.stats.current_session.topic || '';
+        }
+      } catch(e) { console.warn('init load failed', e); }
     },
 
-    _parseWire(wire) {
-      const m = wire.match(/^([^|]+?)(?:->|→)([^|]+)\|([a-z]+):(.*)$/s);
-      if(!m) return null;
-      const [,src,dst,type,rest]=m, parts=rest.split(';');
-      return { src:src.trim(), dst:dst.trim(), type, body:parts[0], ctx:parts.slice(1).join('; ') };
+    connectSSE() {
+      this._es = new EventSource('/api/stream');
+
+      this._es.addEventListener('zipr', e => {
+        const d = JSON.parse(e.data);
+        this.handleWire(d.wire, d.ts);
+      });
+
+      this._es.addEventListener('law', e => {
+        const law = JSON.parse(e.data);
+        // prepend (newest first) but avoid duplicates
+        if (!this.laws.find(l => l.id === law.id)) {
+          this.laws.unshift(law);
+          this.$nextTick(() => this.flashLaw(law.id));
+        }
+        this.pushLawFeedEvent(law);
+      });
+
+      this._es.addEventListener('rejected', e => {
+        const law = JSON.parse(e.data);
+        if (!this.rejected.find(r => r.rejected_id === law.rejected_id)) {
+          this.rejected.unshift(law);
+        }
+      });
+
+      this._es.addEventListener('stats', e => {
+        this.stats = JSON.parse(e.data);
+        if (this.stats.current_session) {
+          this.currentTopic = this.stats.current_session.topic || '';
+        } else {
+          this.currentTopic = '';
+        }
+      });
+
+      this._es.addEventListener('session', e => {
+        const d = JSON.parse(e.data);
+        if (d.type === 'start') this.currentTopic = d.topic || '';
+        if (d.type === 'end')   this.currentTopic = '';
+      });
+
+      this._es.addEventListener('heartbeat', () => {});
+
+      this._es.onerror = () => {
+        setTimeout(() => this.connectSSE(), 5000);
+      };
     },
 
-    _onWire(wire, ts) {
-      this._msgTs.push(Date.now());
-      if(this._msgTs.length>600) this._msgTs.shift();
-      const p = this._parseWire(wire);
-      if(!p) return;
-      const time = new Date((ts||Date.now()/1000)*1000).toLocaleTimeString();
-
-      if(p.type==='b' && p.body.includes('law_codified')) {
-        const lawId  = (p.body.match(/id=([^,;]+)/)||[])[1];
-        const lawText= (p.body.match(/law="([^"]+)"/) ||[])[1]||'';
-        const conf   = parseFloat((p.body.match(/confidence=([0-9.]+)/)||[])[1]||'0');
-        const tm     = p.body.match(/tags=\[([^\]]*)\]/);
-        const tags   = tm ? tm[1].split(',').map(t=>t.trim().replace(/^"|"$/g,'')) : [];
-        const msg    = { isLawCard:true, lawId, lawText, confidence:conf, tags, time, _key:this._msgKey++ };
-        if(this.paused){this.buffered.unshift(msg);return;}
-        this.messages.unshift(msg);
-        if(this.messages.length>500) this.messages.pop();
-        return;
-      }
-
-      const msg = { ...p, wire, bodyStr:this._fmtBody(p.body), ctxStr:p.ctx, time, isLawCard:false, _key:this._msgKey++ };
-      if(this.paused){this.buffered.unshift(msg);return;}
-      this.messages.unshift(msg);
-      if(this.messages.length>500) this.messages.pop();
-
-      const name = p.src?.toLowerCase();
-      if(this.agents.find(a=>a.name===name)) {
-        this.activeAgent = name;
-        const el = document.getElementById(`seal-${name}`);
-        if(el) { el.style.transform='scale(1.3)'; setTimeout(()=>{el.style.transform='scale(1)';},400); }
-        setTimeout(()=>{ if(this.activeAgent===name) this.activeAgent=null; }, 2500);
-      }
-    },
-
-    _onNewLaw(law) {
-      if(!this.laws.find(l=>l.id===law.id)) {
-        this.laws.unshift(law);
-        this.stats.law_count = this.laws.length;
-      }
-      this.newLawIds = new Set([...this.newLawIds, law.id]);
-      setTimeout(()=>{ const s=new Set(this.newLawIds); s.delete(law.id); this.newLawIds=s; }, 2500);
-    },
-
-    _onRejected(law) {
-      if(!this.rejected.find(r=>r.rejected_id===law.rejected_id)) {
-        this.rejected.unshift(law);
-      }
-      this.newRejectedIds = new Set([...this.newRejectedIds, law.rejected_id]);
-      setTimeout(()=>{ const s=new Set(this.newRejectedIds); s.delete(law.rejected_id); this.newRejectedIds=s; }, 2500);
-    },
-
-    _fmtBody(body) {
-      return body
-        .replace(/\[([^\]]*)\]/g,(m,inner)=>{const items=inner.split(',').filter(Boolean);return items.length>2?`[${items.length} items]`:m;})
-        .slice(0,130) + (body.length>130?'…':'');
-    },
-
-    togglePause() {
-      this.paused=!this.paused;
-      if(!this.paused) {
-        [...this.buffered].reverse().forEach(m=>{this.messages.unshift(m);if(this.messages.length>500)this.messages.pop();});
-        this.buffered=[];
-      }
-    },
-
-    openLaw(law)        { this.selectedLaw=law; this.showDetail=true; },
-    closeDetail()       { this.showDetail=false; setTimeout(()=>this.selectedLaw=null,350); },
-    openLawById(id)     { const l=this.laws.find(l=>l.id===id); if(l) this.openLaw(l); else fetch(`/api/laws/${id}`).then(r=>r.json()).then(l=>{if(l.id)this.openLaw(l);}); },
-
-    async openTranscript(sid) {
-      if(!sid) return;
-      this.showTranscript=true; this.transcriptSession=sid; this.transcriptLines=[];
+    handleWire(wire, ts) {
+      if (!wire) return;
       try {
-        const d = await (await fetch(`/api/sessions/${sid}`)).json();
-        this.transcriptLines=[JSON.stringify(d.summary),...(d.wires||[])];
-      } catch(e){ this.transcriptLines=['[error loading transcript]']; }
+        // ZIPR wire format: TYPE src→dst {json}
+        // Parse: first token = type char, second = route, rest = body JSON
+        const firstSpace = wire.indexOf(' ');
+        if (firstSpace < 0) return;
+        const typeChar = wire.slice(0, firstSpace).trim();
+        const rest     = wire.slice(firstSpace + 1).trim();
+
+        const arrowIdx = rest.indexOf(' ');
+        let src = '', dst = '', bodyStr = rest;
+        if (arrowIdx > 0) {
+          const route = rest.slice(0, arrowIdx);
+          bodyStr = rest.slice(arrowIdx + 1).trim();
+          const parts = route.split('→');
+          src = parts[0] || '';
+          dst = parts[1] || '';
+        }
+
+        // Mark agents active
+        [src, dst].forEach(ag => {
+          if (ag && this.agents.find(a => a.name === ag)) {
+            this.setAgentActive(ag);
+          }
+        });
+
+        // Parse body for display
+        let bodyDisplay = bodyStr;
+        try {
+          const bd = JSON.parse(bodyStr);
+          bodyDisplay = this.summarizeBody(bd);
+        } catch(_) {}
+
+        const msg = {
+          id:       ++this.msgId,
+          ts:       this.tsStr(ts),
+          src:      src,
+          dst:      dst,
+          type:     typeChar,
+          typeName: this.typeName(typeChar),
+          body:     bodyDisplay.slice(0, 120),
+          isLaw:    false,
+        };
+        this.messages.unshift(msg);
+        if (this.messages.length > 400) this.messages.splice(400);
+      } catch(e) {}
     },
 
+    pushLawFeedEvent(law) {
+      const msg = {
+        id:      ++this.msgId,
+        ts:      this.tsStr(),
+        src:     'codex',
+        dst:     'canon',
+        type:    'l',
+        typeName: 'law',
+        body:    '',
+        isLaw:   true,
+        lawId:   law.id,
+        lawText: (law.law || '').slice(0, 200),
+      };
+      this.messages.unshift(msg);
+      if (this.messages.length > 400) this.messages.splice(400);
+    },
+
+    flashLaw(id) {
+      const el = document.getElementById('law-' + id);
+      if (el) {
+        el.classList.remove('flash-new');
+        void el.offsetWidth; // reflow
+        el.classList.add('flash-new');
+      }
+    },
+
+    setAgentActive(name) {
+      const ag = this.agents.find(a => a.name === name);
+      if (!ag) return;
+      ag.active = true;
+      clearTimeout(this._agentTimers[name]);
+      this._agentTimers[name] = setTimeout(() => { ag.active = false; }, 4000);
+    },
+
+    // ── Detail panel ─────────────────────────────────────────
+    openDetail(law, rejected = false) {
+      this.selectedLaw = law;
+      this.isRejected  = rejected || !!law.rejected_id;
+    },
+
+    closeDetail() {
+      this.selectedLaw = null;
+      this.isRejected  = false;
+    },
+
+    // ── Transcript ────────────────────────────────────────────
+    async openTranscript(sessionId) {
+      this.transcriptSessionId = sessionId;
+      this.transcriptLines     = [];
+      this.transcriptOpen      = true;
+      try {
+        const res  = await fetch('/api/sessions/' + sessionId);
+        const data = await res.json();
+        this.transcriptLines = (data.wires || []);
+      } catch(e) {
+        this.transcriptLines = ['[error loading transcript]'];
+      }
+    },
+
+    closeTranscript() {
+      this.transcriptOpen = false;
+    },
+
+    // ── Helpers ───────────────────────────────────────────────
     agentRgb(name) {
-      return { herald:'74,143,204', kronos:'139,108,196', loom:'74,170,122', verity:'184,74,42', codex:'201,168,76' }[name?.toLowerCase()] || '90,74,48';
+      const map = {
+        herald: '72,120,192',
+        kronos: '120,80,180',
+        loom:   '60,160,100',
+        verity: '180,64,48',
+        codex:  '200,136,30',
+      };
+      return map[name] || '90,80,70';
     },
-    typeLabel(t) {
-      return { s:'Signum', q:'Quaestio', r:'Responsum', t:'Mandatum', b:'Edictum', e:'Erratum', a:'Acceptum', p:'Pulsus', c:'Capaces', x:'Terminus' }[t] || t.toUpperCase();
+
+    typeRgb(t) {
+      const map = {
+        s: '72,120,192',
+        q: '120,80,180',
+        r: '60,160,100',
+        t: '200,136,30',
+        b: '200,136,30',
+        e: '180,64,48',
+        a: '60,160,100',
+        p: '100,90,80',
+      };
+      return map[t] || '90,80,70';
     },
-    typeColor(t) {
-      return { s:'#4a8fcc', q:'#8b6cc4', r:'#4aaa7a', t:'#c9a84c', b:'#c9a84c', e:'#b84a2a', a:'#4aaa7a', p:'#5a4a30' }[t] || 'var(--ink-m)';
+
+    typeName(t) {
+      const map = {
+        s: 'signal', q: 'query', r: 'reply',
+        t: 'task',   b: 'bcast', e: 'error',
+        a: 'ack',    p: 'ping',
+      };
+      return map[t] || t || '?';
     },
+
     confColor(v) {
-      if(v>=0.75) return '#4aaa7a';
-      if(v>=0.55) return '#c9a84c';
-      return '#b84a2a';
+      if (v >= 0.75) return '#4a9060';
+      if (v >= 0.55) return '#cc8820';
+      return '#b04030';
     },
+
     wireColor(line) {
-      const m=line.match(/^([^-]+)->/);
-      return `color: rgba(${this.agentRgb(m?m[1].trim().toLowerCase():'')}, 0.75)`;
+      if (!line) return '#5a5048';
+      const lower = line.toLowerCase();
+      if (lower.includes('herald'))  return 'rgba(72,120,192,0.7)';
+      if (lower.includes('kronos'))  return 'rgba(120,80,180,0.7)';
+      if (lower.includes('loom'))    return 'rgba(60,160,100,0.7)';
+      if (lower.includes('verity'))  return 'rgba(180,64,48,0.7)';
+      if (lower.includes('codex'))   return 'rgba(200,136,30,0.7)';
+      return '#5a5048';
     },
-  }));
-});
+
+    summarizeBody(body) {
+      if (!body || typeof body !== 'object') return String(body || '');
+      const keys = ['law', 'topic', 'signal', 'summary', 'verdict', 'deep_pattern'];
+      for (const k of keys) {
+        if (body[k] && typeof body[k] === 'string') return body[k];
+      }
+      return JSON.stringify(body).slice(0, 120);
+    },
+
+    tsStr(ts) {
+      const d = ts ? new Date(ts * 1000) : new Date();
+      return d.toTimeString().slice(0, 8);
+    },
+
+    uptimeStr() {
+      const s = this.stats.uptime_seconds || 0;
+      const h = Math.floor(s / 3600);
+      const m = Math.floor((s % 3600) / 60);
+      const sc = s % 60;
+      if (h > 0) return `${h}h ${m}m`;
+      if (m > 0) return `${m}m ${sc}s`;
+      return `${sc}s`;
+    },
+  };
+}
 </script>
 </body>
 </html>
