@@ -31,7 +31,7 @@ ROOT = Path(__file__).parent.parent.parent
 sys.path.insert(0, str(ROOT))
 
 from council.config import SEEDS, SESSION_INTERVAL, SESSIONS_DIR
-from council.storage import load_canon, law_count, session_log_path, add_wire_listener, add_law_listener
+from council.storage import load_canon, load_rejected, law_count, session_log_path, add_wire_listener, add_law_listener, add_rejected_listener
 from council.session import run_session, make_session_id
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(name)s %(levelname)s %(message)s", datefmt="%H:%M:%S")
@@ -65,12 +65,14 @@ def _on_wire(wire: str) -> None:
 
 
 def _on_law(law: dict) -> None:
-    """Called by council.storage.save_law for every codified law."""
     _push("law", law)
 
+def _on_rejected(law: dict) -> None:
+    _push("rejected", law)
 
 add_wire_listener(_on_wire)
 add_law_listener(_on_law)
+add_rejected_listener(_on_rejected)
 
 
 # ---------------------------------------------------------------------------
@@ -158,6 +160,13 @@ async def get_law(law_id: str):
 @app.get("/api/stats")
 async def get_stats():
     return JSONResponse(_stats())
+
+
+@app.get("/api/rejected")
+async def get_rejected():
+    laws = load_rejected()
+    laws.reverse()
+    return JSONResponse(laws)
 
 
 @app.get("/api/sessions")

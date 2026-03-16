@@ -9,6 +9,7 @@ import logging
 from zipr import ZiprMessage, query, task
 from ..think import think
 from ..config import MODEL_LOOM, APPROVAL_THRESHOLD
+from ..storage import save_rejected
 
 log = logging.getLogger("council.loom")
 
@@ -133,22 +134,27 @@ def register_loom(bus) -> None:
             confidence = float(law_data.get("confidence", 0))
             log.info("[loom] revised law (confidence=%.2f): %s", confidence, law_data.get("law", "")[:80])
 
-        # 5. If confidence meets threshold, send to Codex
+        # 5. If confidence meets threshold, send to Codex; otherwise record rejection
+        law_record = {
+            "law":        law_data.get("law", ""),
+            "mechanism":  law_data.get("mechanism", ""),
+            "prediction": law_data.get("prediction", ""),
+            "evidence":   law_data.get("evidence", []),
+            "confidence": confidence,
+            "topic":      topic,
+            "session":    session,
+            "analogues":  analogues,
+            "signals":    signals,
+        }
+
         if confidence >= APPROVAL_THRESHOLD:
-            codex_t = task(
-                "loom", "codex",
-                {
-                    "law":         law_data.get("law", ""),
-                    "mechanism":   law_data.get("mechanism", ""),
-                    "prediction":  law_data.get("prediction", ""),
-                    "evidence":    law_data.get("evidence", []),
-                    "confidence":  confidence,
-                    "topic":       topic,
-                    "session":     session,
-                    "analogues":   analogues,
-                    "signals":     signals,
-                },
-            )
-            await bus.publish(codex_t)
+            await bus.publish(task("loom", "codex", law_record))
         else:
-            log.info("[loom] law rejected (confidence=%.2f < threshold=%.2f)", confidence, APPROVAL_THRESHOLD)
+            stage = "verity" if verdict == "rejected" else "threshold"
+            save_rejected(
+                law_record,
+                reason=verdict_msg.body.get("verdict_reason", ""),
+                counterexamples=verdict_msg.body.get("counterexamples", []),
+                stage=stage,
+            )
+            log.info("[loom] law rejected (%s, confidence=%.2f)", stage, confidence)

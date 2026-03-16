@@ -12,17 +12,18 @@ from pathlib import Path
 
 from .config import CANON_FILE, SESSIONS_DIR
 
+REJECTED_FILE = CANON_FILE.parent / "rejected.json"
+
 log = logging.getLogger("council.storage")
 
 # Live listener hooks — registered by the dashboard server
-_wire_listeners: list = []
-_law_listeners:  list = []
+_wire_listeners:     list = []
+_law_listeners:      list = []
+_rejected_listeners: list = []
 
-def add_wire_listener(fn) -> None:
-    _wire_listeners.append(fn)
-
-def add_law_listener(fn) -> None:
-    _law_listeners.append(fn)
+def add_wire_listener(fn)     -> None: _wire_listeners.append(fn)
+def add_law_listener(fn)      -> None: _law_listeners.append(fn)
+def add_rejected_listener(fn) -> None: _rejected_listeners.append(fn)
 
 
 # ---------------------------------------------------------------------------
@@ -61,6 +62,37 @@ def save_law(law: dict) -> None:
 
 def law_count() -> int:
     return len(load_canon())
+
+
+def load_rejected() -> list[dict]:
+    if not REJECTED_FILE.exists():
+        return []
+    try:
+        return json.loads(REJECTED_FILE.read_text(encoding="utf-8"))
+    except (json.JSONDecodeError, OSError):
+        return []
+
+
+def save_rejected(law: dict, reason: str, counterexamples: list, stage: str) -> None:
+    """Record a law that was rejected by Verity or fell below the confidence threshold."""
+    rejected = load_rejected()
+    entry = {
+        **law,
+        "rejected_id":      f"R{len(rejected) + 1:04d}",
+        "rejected_at":      datetime.now(timezone.utc).isoformat(),
+        "verdict_reason":   reason,
+        "counterexamples":  counterexamples,
+        "stage":            stage,   # "verity" | "threshold" | "revision"
+    }
+    rejected.append(entry)
+    REJECTED_FILE.parent.mkdir(parents=True, exist_ok=True)
+    REJECTED_FILE.write_text(json.dumps(rejected, indent=2, ensure_ascii=False), encoding="utf-8")
+    log.info("Law rejected (%s): %s", stage, law.get("law", "")[:80])
+    for fn in _rejected_listeners:
+        try:
+            fn(dict(entry))
+        except Exception:
+            pass
 
 
 # ---------------------------------------------------------------------------
