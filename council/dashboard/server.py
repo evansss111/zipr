@@ -22,6 +22,8 @@ from itertools import cycle
 from pathlib import Path
 
 import uvicorn
+from dotenv import load_dotenv
+load_dotenv()
 from fastapi import FastAPI, Request
 from fastapi.responses import FileResponse, JSONResponse, StreamingResponse
 
