@@ -90,12 +90,15 @@ async def think(
                 {"role": "user", "content": prompt},
             ],
         )
+        stop_reason = resp.stop_reason
         text = resp.content[0].text.strip()
-        log.debug("Raw response: %.200s", text)
+
+        if stop_reason == "max_tokens":
+            log.warning("Response truncated (max_tokens=%d) — increase limit", max_tokens)
 
         result = _extract_json(text)
         if result is None:
-            log.warning("JSON parse failed, raw: %.300s", text)
+            log.warning("JSON parse failed (stop=%s) raw: %.500s", stop_reason, text)
             return {"raw": text}
         return result
 

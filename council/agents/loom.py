@@ -108,7 +108,7 @@ def register_loom(bus) -> None:
             "Propose a fundamental law."
         )
 
-        law_data = await think(WEAVE_SYSTEM, weave_prompt, model=MODEL_LOOM, max_tokens=600)
+        law_data = await think(WEAVE_SYSTEM, weave_prompt, model=MODEL_LOOM, max_tokens=1000)
         log.info("[loom] proposed law (confidence=%.2f): %s", law_data.get("confidence", 0), law_data.get("law", "")[:80])
 
         # 3. Send to Verity for scrutiny
@@ -125,7 +125,7 @@ def register_loom(bus) -> None:
             },
         )
         try:
-            verdict_msg = await bus.request(verity_t, timeout=90.0)
+            verdict_msg = await bus.request(verity_t, timeout=120.0)
         except TimeoutError:
             log.warning("[loom] verity timed out — skipping law")
             return
@@ -145,7 +145,7 @@ def register_loom(bus) -> None:
                 f"Verity's suggested revision: {revised}\n\n"
                 "Revise the law."
             )
-            law_data = await think(REVISE_SYSTEM, revise_prompt, model=MODEL_LOOM, max_tokens=500)
+            law_data = await think(REVISE_SYSTEM, revise_prompt, model=MODEL_LOOM, max_tokens=800)
             confidence = float(law_data.get("confidence", 0))
             log.info("[loom] revised law (confidence=%.2f): %s", confidence, law_data.get("law", "")[:80])
 

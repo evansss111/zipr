@@ -59,7 +59,7 @@ def register_verity(bus) -> None:
             "Evaluate this law."
         )
 
-        result = await think(SYSTEM, prompt, model=MODEL_VERITY, max_tokens=600)
+        result = await think(SYSTEM, prompt, model=MODEL_VERITY, max_tokens=1200)
         verdict = result.get("verdict", "rejected")
         conf    = float(result.get("confidence", 0))
 
