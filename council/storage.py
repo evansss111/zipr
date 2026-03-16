@@ -14,6 +14,16 @@ from .config import CANON_FILE, SESSIONS_DIR
 
 log = logging.getLogger("council.storage")
 
+# Live listener hooks — registered by the dashboard server
+_wire_listeners: list = []
+_law_listeners:  list = []
+
+def add_wire_listener(fn) -> None:
+    _wire_listeners.append(fn)
+
+def add_law_listener(fn) -> None:
+    _law_listeners.append(fn)
+
 
 # ---------------------------------------------------------------------------
 # Canon
@@ -42,6 +52,11 @@ def save_law(law: dict) -> None:
         encoding="utf-8",
     )
     log.info("Law %s codified: %s", law_id, law.get("law", "")[:80])
+    for fn in _law_listeners:
+        try:
+            fn(dict(law))
+        except Exception:
+            pass
 
 
 def law_count() -> int:
@@ -62,6 +77,11 @@ def log_wire(session_id: str, wire: str) -> None:
     path = session_log_path(session_id)
     with path.open("a", encoding="utf-8") as f:
         f.write(wire + "\n")
+    for fn in _wire_listeners:
+        try:
+            fn(wire)
+        except Exception:
+            pass
 
 
 def save_session_summary(session_id: str, topic: str, n_laws: int, wires: list[str]) -> None:

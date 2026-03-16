@@ -1,0 +1,1292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Eternal Council</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Crimson+Pro:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      fontFamily: {
+        mono: ['"JetBrains Mono"', 'Consolas', 'monospace'],
+        serif: ['"Crimson Pro"', 'Georgia', 'serif'],
+      }
+    }
+  }
+}
+</script>
+<style>
+  :root {
+    --bg:       #080b14;
+    --s1:       #0d1117;
+    --s2:       #111827;
+    --s3:       #1c2333;
+    --border:   #1e2d40;
+    --border-h: #2a3f5a;
+    --txt:      #e2e8f0;
+    --txt-s:    #64748b;
+    --txt-m:    #334155;
+    --txt-a:    #94a3b8;
+    --amber:    #f59e0b;
+
+    --herald:   59, 130, 246;
+    --kronos:   139, 92, 246;
+    --loom:     16, 185, 129;
+    --verity:   239, 68, 68;
+    --codex:    245, 158, 11;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    height: 100%;
+    overflow: hidden;
+    background: var(--bg);
+    color: var(--txt);
+    font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+  }
+
+  ::-webkit-scrollbar { width: 4px; height: 4px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--border-h); }
+
+  /* Layout */
+  .app {
+    display: grid;
+    grid-template-rows: 52px 60px 1fr;
+    height: 100dvh;
+  }
+
+  .main-area {
+    display: grid;
+    grid-template-columns: minmax(0, 54fr) minmax(0, 46fr);
+    overflow: hidden;
+    border-top: 1px solid var(--border);
+  }
+
+  .feed-panel, .canon-panel {
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+
+  /* Header */
+  .header {
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    position: relative;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent 0%, rgba(var(--herald), 0.6) 30%, rgba(var(--codex), 0.6) 70%, transparent 100%);
+    animation: scanline 4s ease-in-out infinite;
+  }
+  @keyframes scanline {
+    0%, 100% { opacity: 0.2; }
+    50% { opacity: 0.8; }
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .logo-mark {
+    width: 28px;
+    height: 28px;
+    opacity: 0.9;
+  }
+  .logo-text {
+    font-family: 'Crimson Pro', serif;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--txt);
+  }
+
+  .stat-chips {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--txt-s);
+  }
+  .stat-chip {
+    padding: 0 14px;
+    border-left: 1px solid var(--border);
+    line-height: 1;
+  }
+  .stat-chip span { color: var(--txt-a); }
+  .stat-chip .val { color: var(--txt); font-weight: 500; }
+
+  .live-dot {
+    display: inline-block;
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: #22c55e;
+    margin-right: 6px;
+    animation: blink 1.2s step-end infinite;
+  }
+  .live-dot.off { background: var(--txt-m); animation: none; }
+  @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+  /* Agent Status Bar */
+  .agent-bar {
+    background: var(--s1);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    gap: 28px;
+  }
+
+  .agent-bar-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    color: var(--txt-m);
+    text-transform: uppercase;
+    margin-right: 4px;
+    white-space: nowrap;
+  }
+
+  .agent-orb-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: default;
+  }
+  .orb-outer {
+    position: relative;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .orb-ring {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    border: 1.5px solid transparent;
+    transition: border-color 0.3s;
+  }
+  .orb-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+  }
+  .orb-outer.active .orb-ring {
+    animation: spin 1.4s linear infinite;
+  }
+  .orb-outer.active .orb-dot {
+    transform: scale(1.15);
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .agent-name-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    color: var(--txt-s);
+    text-transform: uppercase;
+    transition: color 0.3s;
+  }
+  .orb-outer.active + .agent-name-label { color: var(--txt-a); }
+
+  .orb-flash {
+    animation: orb-flash-anim 0.8s ease-out forwards;
+  }
+  @keyframes orb-flash-anim {
+    0%   { transform: scale(1.4); }
+    100% { transform: scale(1); }
+  }
+
+  /* Panel headers */
+  .panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px 10px;
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    background: var(--s1);
+    z-index: 10;
+  }
+  .panel-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.18em;
+    color: var(--txt-m);
+    text-transform: uppercase;
+  }
+  .panel-sub {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    color: var(--txt-m);
+  }
+  .btn-sm {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    color: var(--txt-s);
+    background: var(--s2);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 3px 8px;
+    cursor: pointer;
+    transition: all 0.15s;
+    text-transform: uppercase;
+  }
+  .btn-sm:hover { background: var(--s3); border-color: var(--border-h); color: var(--txt-a); }
+  .btn-sm.active { color: #f59e0b; border-color: rgba(245,158,11,0.4); }
+
+  /* Feed */
+  .feed-panel { background: var(--bg); }
+  .feed-list { padding: 0 0 40px; }
+
+  .msg-row {
+    border-left: 2px solid transparent;
+    border-bottom: 1px solid #0a0f1a;
+    padding: 8px 16px 7px 14px;
+    cursor: pointer;
+    transition: background 0.15s;
+    animation: msg-slide-in 0.3s ease-out;
+  }
+  .msg-row:hover { background: #0d1117; }
+
+  @keyframes msg-slide-in {
+    from { opacity: 0; transform: translateY(-6px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .msg-top {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    line-height: 1;
+    margin-bottom: 4px;
+    flex-wrap: wrap;
+  }
+  .msg-type-badge {
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    padding: 2px 5px;
+    border-radius: 2px;
+    border: 1px solid;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .msg-arrow { color: var(--txt-m); font-size: 10px; }
+  .msg-dst { color: var(--txt-s); }
+  .msg-ts { margin-left: auto; color: var(--txt-m); font-size: 9px; flex-shrink: 0; }
+
+  .msg-body {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--txt-s);
+    padding-left: 2px;
+    line-height: 1.5;
+    word-break: break-all;
+    white-space: pre-wrap;
+  }
+  .msg-ctx {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    color: var(--txt-m);
+    padding-left: 2px;
+    margin-top: 2px;
+  }
+
+  /* Law codified special card in feed */
+  .law-codified-card {
+    margin: 8px 12px;
+    border: 1px solid rgba(245,158,11,0.45);
+    border-radius: 5px;
+    background: rgba(245,158,11,0.04);
+    padding: 12px 14px;
+    animation: law-codified-in 1.2s ease-out forwards;
+    cursor: pointer;
+  }
+  @keyframes law-codified-in {
+    0%   { border-color: rgba(245,158,11,0.9); box-shadow: 0 0 20px rgba(245,158,11,0.3); }
+    60%  { border-color: rgba(245,158,11,0.5); box-shadow: 0 0 8px rgba(245,158,11,0.1); }
+    100% { border-color: rgba(245,158,11,0.35); box-shadow: none; }
+  }
+  .law-codified-header {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.14em;
+    color: #f59e0b;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .law-codified-text {
+    font-family: 'Crimson Pro', serif;
+    font-style: italic;
+    font-size: 14px;
+    color: var(--txt);
+    line-height: 1.45;
+    margin-bottom: 8px;
+  }
+
+  /* Canon panel */
+  .canon-panel {
+    background: var(--s1);
+    border-left: 1px solid var(--border);
+  }
+
+  .filter-bar {
+    padding: 8px 12px;
+    background: var(--s1);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    gap: 6px;
+  }
+  .filter-input {
+    flex: 1;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    color: var(--txt-a);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    padding: 4px 8px;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  .filter-input:focus { border-color: var(--border-h); }
+  .filter-input::placeholder { color: var(--txt-m); }
+  .filter-select {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    color: var(--txt-s);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    padding: 4px 6px;
+    outline: none;
+    cursor: pointer;
+  }
+
+  .canon-list { padding: 10px 10px 40px; }
+
+  .law-card {
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    padding: 12px 14px;
+    margin-bottom: 7px;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+    position: relative;
+  }
+  .law-card:hover { background: var(--s2); border-color: var(--border-h); }
+  .law-card.hi-conf { border-left: 3px solid rgba(245,158,11,0.5); }
+  .law-card.new-law { animation: law-drop-in 1.4s ease-out forwards; }
+
+  @keyframes law-drop-in {
+    0%   { opacity: 0; transform: translateY(-10px); border-color: rgba(245,158,11,0.8); }
+    35%  { opacity: 1; transform: translateY(0);     border-color: rgba(245,158,11,0.45); }
+    100% { border-color: var(--border); }
+  }
+  .law-card.hi-conf.new-law { animation: law-drop-in-hi 1.4s ease-out forwards; }
+  @keyframes law-drop-in-hi {
+    0%   { opacity: 0; transform: translateY(-10px); border-left-color: rgba(245,158,11,0.9); }
+    35%  { opacity: 1; transform: translateY(0);     border-left-color: rgba(245,158,11,0.7); }
+    100% { border-left-color: rgba(245,158,11,0.5); }
+  }
+
+  .law-card-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 7px;
+  }
+  .law-id {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--amber);
+    font-weight: 600;
+    letter-spacing: 0.05em;
+  }
+  .law-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 3px;
+    justify-content: flex-end;
+    flex: 1;
+    margin-left: 8px;
+  }
+  .tag-pill {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8px;
+    color: var(--txt-m);
+    background: var(--s3);
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    padding: 1px 5px;
+    white-space: nowrap;
+  }
+  .law-text {
+    font-family: 'Crimson Pro', serif;
+    font-style: italic;
+    font-size: 14.5px;
+    color: var(--txt);
+    line-height: 1.45;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    margin-bottom: 9px;
+  }
+  .conf-bar-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .conf-bar {
+    flex: 1;
+    height: 3px;
+    border-radius: 2px;
+    background: var(--s3);
+    overflow: hidden;
+  }
+  .conf-bar-fill {
+    height: 100%;
+    border-radius: 2px;
+    transition: width 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  .conf-val {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    color: var(--txt-s);
+    white-space: nowrap;
+    flex-shrink: 0;
+    width: 28px;
+  }
+
+  /* Detail panel */
+  .detail-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(8, 11, 20, 0.75);
+    z-index: 40;
+    opacity: 0;
+    transition: opacity 0.25s ease;
+    pointer-events: none;
+  }
+  .detail-overlay.open {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  .detail-panel {
+    position: fixed;
+    top: 0; right: 0;
+    width: min(480px, 100vw);
+    height: 100dvh;
+    background: var(--s1);
+    border-left: 1px solid var(--border);
+    z-index: 50;
+    transform: translateX(100%);
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+  }
+  .detail-panel.open { transform: translateX(0); }
+
+  .detail-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    background: var(--s1);
+    z-index: 1;
+  }
+  .detail-close {
+    width: 28px; height: 28px;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 4px;
+    cursor: pointer;
+    color: var(--txt-s);
+    font-size: 16px;
+    transition: background 0.15s, color 0.15s;
+  }
+  .detail-close:hover { background: var(--s3); color: var(--txt); }
+
+  .detail-body { padding: 20px 18px; flex: 1; }
+  .detail-section { margin-bottom: 22px; }
+  .detail-section-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    color: var(--txt-m);
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 5px;
+    margin-bottom: 10px;
+  }
+  .detail-law-text {
+    font-family: 'Crimson Pro', serif;
+    font-style: italic;
+    font-size: 18px;
+    line-height: 1.5;
+    color: var(--txt);
+  }
+  .detail-prose {
+    font-size: 13px;
+    color: var(--txt-s);
+    line-height: 1.6;
+  }
+  .detail-prediction {
+    font-size: 13px;
+    color: #93c5fd;
+    line-height: 1.6;
+    font-family: 'Crimson Pro', serif;
+  }
+  .detail-evidence-item {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--txt-s);
+    line-height: 1.5;
+    padding: 5px 0;
+    border-bottom: 1px solid #0d1117;
+    display: flex;
+    gap: 8px;
+  }
+  .detail-evidence-item::before { content: '·'; color: var(--txt-m); flex-shrink: 0; }
+  .analogue-card {
+    border: 1px solid var(--border);
+    border-left: 3px solid rgba(var(--kronos), 0.5);
+    border-radius: 4px;
+    padding: 9px 12px;
+    margin-bottom: 6px;
+    font-size: 11px;
+  }
+  .analogue-era {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    color: rgba(var(--kronos), 0.8);
+    margin-bottom: 4px;
+  }
+  .analogue-text { color: var(--txt-s); line-height: 1.5; }
+
+  /* Session transcript modal */
+  .transcript-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 60;
+    background: rgba(5, 8, 16, 0.95);
+    display: flex;
+    flex-direction: column;
+    transform: translateY(100%);
+    transition: transform 0.3s ease;
+  }
+  .transcript-modal.open { transform: translateY(0); }
+  .transcript-header {
+    padding: 12px 18px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--s1);
+  }
+  .transcript-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 12px 16px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    background: #050810;
+  }
+  .transcript-wire {
+    padding: 4px 0;
+    border-bottom: 1px solid #0a0d14;
+    line-height: 1.5;
+    color: var(--txt-s);
+    word-break: break-all;
+  }
+
+  /* Empty state */
+  .empty-state {
+    padding: 48px 24px;
+    text-align: center;
+    color: var(--txt-m);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    line-height: 1.7;
+  }
+
+  /* Shimmer skeleton */
+  .skeleton {
+    border-radius: 4px;
+    background: linear-gradient(90deg, var(--s2) 0%, var(--s3) 50%, var(--s2) 100%);
+    background-size: 200%;
+    animation: shimmer 1.6s infinite;
+  }
+  @keyframes shimmer { from { background-position: 200% 0; } to { background-position: -200% 0; } }
+</style>
+</head>
+
+<body>
+<div class="app" x-data="council()" x-init="init()">
+
+  <!-- ── HEADER ─────────────────────────────────────────────────── -->
+  <header class="header">
+    <div class="logo">
+      <svg class="logo-mark" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <polygon points="14,2 26,8 26,20 14,26 2,20 2,8" stroke="#f59e0b" stroke-width="1" fill="none" opacity="0.7"/>
+        <polygon points="14,7 22,11 22,18 14,22 6,18 6,11" stroke="#3b82f6" stroke-width="0.75" fill="none" opacity="0.5"/>
+        <circle cx="14" cy="14" r="2" fill="#f59e0b" opacity="0.9"/>
+        <line x1="14" y1="7" x2="14" y2="11" stroke="#64748b" stroke-width="0.5"/>
+        <line x1="14" y1="17" x2="14" y2="21" stroke="#64748b" stroke-width="0.5"/>
+        <line x1="7" y1="11" x2="12" y2="13.5" stroke="#64748b" stroke-width="0.5"/>
+        <line x1="16" y1="13.5" x2="21" y2="11" stroke="#64748b" stroke-width="0.5"/>
+      </svg>
+      <span class="logo-text">The Eternal Council</span>
+    </div>
+
+    <div class="stat-chips">
+      <div class="stat-chip" style="border-left:none;">
+        <span class="live-dot" :class="{ off: !streaming }"></span>
+        <span x-text="streaming ? 'LIVE' : 'OFFLINE'"></span>
+      </div>
+      <div class="stat-chip">
+        <span>UPTIME </span><span class="val" x-text="uptime"></span>
+      </div>
+      <div class="stat-chip">
+        <span>§ </span><span class="val" x-text="stats.session_count"></span>
+        <span> sessions</span>
+      </div>
+      <div class="stat-chip">
+        <span>Λ </span><span class="val" x-text="stats.law_count"></span>
+        <span> laws</span>
+      </div>
+      <div class="stat-chip">
+        <span class="val" x-text="msgPerMin"></span><span> msg/min</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- ── AGENT STATUS BAR ───────────────────────────────────────── -->
+  <div class="agent-bar">
+    <span class="agent-bar-label">Agents</span>
+
+    <template x-for="agent in agents" :key="agent.name">
+      <div class="agent-orb-wrap" :title="agent.status">
+        <div class="orb-outer" :class="{ active: activeAgent === agent.name }">
+          <div class="orb-ring"
+               :style="`border-color: rgba(${agent.rgb}, ${activeAgent === agent.name ? 0.7 : 0})`"></div>
+          <div class="orb-dot"
+               :id="`orb-${agent.name}`"
+               :style="`background: rgba(${agent.rgb}, ${activeAgent === agent.name ? 1 : 0.3}); box-shadow: ${activeAgent === agent.name ? '0 0 10px 2px rgba('+agent.rgb+',0.5)' : 'none'}`">
+          </div>
+        </div>
+        <span class="agent-name-label"
+              :style="activeAgent === agent.name ? `color: rgb(${agent.rgb})` : ''"
+              x-text="agent.name"></span>
+      </div>
+    </template>
+
+    <div style="margin-left:auto; font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--txt-m);"
+         x-show="stats.current_session">
+      <span style="color:var(--txt-s)">Session</span>
+      <span x-text="stats.current_session?.num"></span>
+      <span style="color:var(--border-h)">  ·  </span>
+      <span x-text="stats.current_session?.topic?.slice(0,50)"></span>
+    </div>
+  </div>
+
+  <!-- ── MAIN AREA ──────────────────────────────────────────────── -->
+  <div class="main-area">
+
+    <!-- Live Feed -->
+    <div class="feed-panel">
+      <div class="panel-header" style="background:var(--bg)">
+        <div>
+          <div class="panel-title">Live Protocol Feed</div>
+          <div class="panel-sub" x-text="`${messages.length} messages`" style="margin-top:2px;"></div>
+        </div>
+        <div style="display:flex;gap:6px;">
+          <button class="btn-sm" :class="{active: paused}" @click="togglePause"
+                  x-text="paused ? `▶ RESUME (${buffered.length})` : '⏸ PAUSE'"></button>
+          <button class="btn-sm" @click="messages = []">CLEAR</button>
+        </div>
+      </div>
+
+      <div class="feed-list" id="feed-list">
+        <!-- Empty state -->
+        <div class="empty-state" x-show="messages.length === 0">
+          <div style="font-size:20px;margin-bottom:12px;opacity:0.3;">◈</div>
+          Waiting for the council to convene…<br>
+          <span style="color:var(--txt-m);font-size:9px;">Messages will appear here as agents communicate</span>
+        </div>
+
+        <template x-for="(msg, i) in messages" :key="msg._key">
+          <!-- Law codified special card -->
+          <template x-if="msg.isLawCard">
+            <div class="law-codified-card" @click="openLawById(msg.lawId)">
+              <div class="law-codified-header">
+                <span>✦ LAW CODIFIED</span>
+                <span x-text="msg.lawId"></span>
+                <span style="margin-left:auto;color:var(--txt-m);font-size:9px;" x-text="msg.time"></span>
+              </div>
+              <div class="law-codified-text" x-text="msg.lawText"></div>
+              <div style="display:flex;align-items:center;gap:8px;">
+                <div class="conf-bar" style="max-width:120px;">
+                  <div class="conf-bar-fill"
+                       :style="`width:${(msg.confidence||0)*100}%; background:${confColor(msg.confidence||0)}`"></div>
+                </div>
+                <span style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--txt-s);"
+                      x-text="(msg.confidence||0).toFixed(2)"></span>
+                <template x-for="tag in (msg.tags||[])" :key="tag">
+                  <span class="tag-pill" x-text="tag"></span>
+                </template>
+              </div>
+            </div>
+          </template>
+
+          <!-- Regular ZIPR message row -->
+          <template x-if="!msg.isLawCard">
+            <div class="msg-row"
+                 :style="`border-left-color: rgba(${agentRgb(msg.src)}, 0.7)`"
+                 :title="msg.wire">
+              <div class="msg-top">
+                <span class="msg-type-badge"
+                      :style="typeBadgeStyle(msg.type)"
+                      x-text="typeLabel(msg.type)"></span>
+                <span :style="`color:rgb(${agentRgb(msg.src)})`" x-text="msg.src"></span>
+                <span class="msg-arrow">──►</span>
+                <span class="msg-dst"
+                      :style="msg.dst !== '*' ? `color:rgba(${agentRgb(msg.dst)},0.7)` : 'color:#8b5cf6'"
+                      x-text="msg.dst === '*' ? '✦ ALL' : msg.dst"></span>
+                <span class="msg-ts" x-text="msg.time"></span>
+              </div>
+              <div class="msg-body" x-text="msg.bodyStr"></div>
+              <div class="msg-ctx" x-show="msg.ctxStr" x-text="`⟩ ${msg.ctxStr}`"></div>
+            </div>
+          </template>
+        </template>
+      </div>
+    </div>
+
+    <!-- Canon Panel -->
+    <div class="canon-panel">
+      <div class="panel-header">
+        <div>
+          <div class="panel-title">Canon of Laws</div>
+          <div class="panel-sub" x-text="`${filteredLaws.length} of ${laws.length}`" style="margin-top:2px;"></div>
+        </div>
+        <select class="filter-select" x-model="lawTagFilter">
+          <template x-for="tag in allTags" :key="tag">
+            <option :value="tag" x-text="tag === 'all' ? 'all tags' : tag"></option>
+          </template>
+        </select>
+      </div>
+
+      <div class="filter-bar">
+        <input class="filter-input" type="text" x-model="lawFilter" placeholder="search laws…">
+      </div>
+
+      <div class="canon-list">
+        <!-- Skeleton while loading -->
+        <template x-if="laws.length === 0 && !lawsLoaded">
+          <div>
+            <template x-for="i in [1,2,3]" :key="i">
+              <div class="law-card" style="pointer-events:none;">
+                <div class="skeleton" style="height:10px;width:40px;margin-bottom:10px;"></div>
+                <div class="skeleton" style="height:13px;width:100%;margin-bottom:6px;"></div>
+                <div class="skeleton" style="height:13px;width:75%;margin-bottom:12px;"></div>
+                <div class="skeleton" style="height:3px;width:100%;"></div>
+              </div>
+            </template>
+          </div>
+        </template>
+
+        <!-- Empty state after load -->
+        <div class="empty-state" x-show="lawsLoaded && laws.length === 0">
+          <div style="font-size:20px;margin-bottom:12px;opacity:0.3;">Λ</div>
+          No laws have been codified yet.<br>
+          <span style="color:var(--txt-m);font-size:9px;">The council is deliberating…</span>
+        </div>
+
+        <!-- No filter match -->
+        <div class="empty-state" x-show="lawsLoaded && laws.length > 0 && filteredLaws.length === 0">
+          No laws match your filter.
+        </div>
+
+        <template x-for="law in filteredLaws" :key="law.id">
+          <div class="law-card"
+               :class="{ 'hi-conf': law.confidence >= 0.75, 'new-law': newLawIds.has(law.id) }"
+               @click="openLaw(law)">
+            <div class="law-card-top">
+              <span class="law-id" x-text="law.id"></span>
+              <div class="law-tags">
+                <template x-for="tag in (law.tags||[]).slice(0,3)" :key="tag">
+                  <span class="tag-pill" x-text="tag"></span>
+                </template>
+              </div>
+            </div>
+            <div class="law-text" x-text="law.law"></div>
+            <div class="conf-bar-wrap">
+              <div class="conf-bar">
+                <div class="conf-bar-fill"
+                     :style="`width:${(law.confidence||0)*100}%; background:${confColor(law.confidence||0)}`"></div>
+              </div>
+              <span class="conf-val" x-text="(law.confidence||0).toFixed(2)"></span>
+            </div>
+          </div>
+        </template>
+      </div>
+    </div>
+  </div><!-- /main-area -->
+
+  <!-- ── LAW DETAIL PANEL ───────────────────────────────────────── -->
+  <div class="detail-overlay" :class="{ open: showDetail }" @click.self="closeDetail()"></div>
+
+  <div class="detail-panel" :class="{ open: showDetail }">
+    <template x-if="selectedLaw">
+      <div style="display:contents;">
+        <div class="detail-header">
+          <div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--amber);font-weight:600;"
+                 x-text="selectedLaw.id"></div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--txt-m);margin-top:2px;"
+                 x-text="selectedLaw.codified_at?.slice(0,10)"></div>
+          </div>
+          <button class="detail-close" @click="closeDetail()">✕</button>
+        </div>
+
+        <div class="detail-body">
+
+          <div class="detail-section">
+            <div class="detail-section-label">The Law</div>
+            <div class="detail-law-text" x-text="selectedLaw.law"></div>
+          </div>
+
+          <div class="detail-section">
+            <div class="detail-section-label">Mechanism</div>
+            <div class="detail-prose" x-text="selectedLaw.mechanism"></div>
+          </div>
+
+          <div class="detail-section">
+            <div class="detail-section-label">Prediction</div>
+            <div class="detail-prediction" x-text="selectedLaw.prediction"></div>
+          </div>
+
+          <div class="detail-section">
+            <div class="detail-section-label">Confidence</div>
+            <div style="display:flex;align-items:center;gap:10px;">
+              <div class="conf-bar" style="flex:1;">
+                <div class="conf-bar-fill"
+                     :style="`width:${(selectedLaw.confidence||0)*100}%; background:${confColor(selectedLaw.confidence||0)}`"></div>
+              </div>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:11px;"
+                    :style="`color:${confColor(selectedLaw.confidence||0)}`"
+                    x-text="(selectedLaw.confidence||0).toFixed(2)"></span>
+            </div>
+          </div>
+
+          <div class="detail-section" x-show="(selectedLaw.tags||[]).length">
+            <div class="detail-section-label">Tags</div>
+            <div style="display:flex;flex-wrap:wrap;gap:5px;">
+              <template x-for="tag in selectedLaw.tags||[]" :key="tag">
+                <span class="tag-pill" style="font-size:10px;padding:3px 8px;" x-text="tag"></span>
+              </template>
+            </div>
+          </div>
+
+          <div class="detail-section" x-show="(selectedLaw.evidence||[]).length">
+            <div class="detail-section-label">Evidence</div>
+            <template x-for="(ev, i) in selectedLaw.evidence||[]" :key="i">
+              <div class="detail-evidence-item" x-text="ev"></div>
+            </template>
+          </div>
+
+          <div class="detail-section" x-show="(selectedLaw.analogues||[]).length">
+            <div class="detail-section-label">Historical Analogues · Kronos</div>
+            <template x-for="(a, i) in selectedLaw.analogues||[]" :key="i">
+              <div class="analogue-card" x-show="a">
+                <div class="analogue-era" x-text="typeof a === 'object' ? `[${a.era||''}] ${a.domain||''}` : ''"></div>
+                <div class="analogue-text"
+                     x-text="typeof a === 'object' ? (a.structural_echo || a.pattern || a) : a"></div>
+              </div>
+            </template>
+          </div>
+
+          <div class="detail-section" x-show="(selectedLaw.signals||[]).length">
+            <div class="detail-section-label">Signals · Herald</div>
+            <template x-for="(s, i) in selectedLaw.signals||[]" :key="i">
+              <div class="detail-evidence-item" x-text="typeof s === 'object' ? (s.signal||s.title||s) : s"></div>
+            </template>
+          </div>
+
+          <div class="detail-section">
+            <div class="detail-section-label">Session</div>
+            <div style="display:flex;align-items:center;justify-content:space-between;">
+              <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--txt-s);"
+                    x-text="selectedLaw.session"></span>
+              <button class="btn-sm" @click="openTranscript(selectedLaw.session)">view log →</button>
+            </div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--txt-m);margin-top:4px;"
+                 x-text="`topic: ${selectedLaw.topic||''}`"></div>
+          </div>
+
+        </div>
+      </div>
+    </template>
+  </div>
+
+  <!-- ── SESSION TRANSCRIPT MODAL ───────────────────────────────── -->
+  <div class="transcript-modal" :class="{ open: showTranscript }">
+    <div class="transcript-header">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--txt-a);">
+        SESSION TRANSCRIPT
+        <span style="color:var(--txt-m);margin-left:8px;" x-text="transcriptSession"></span>
+      </div>
+      <button class="detail-close" @click="showTranscript=false">✕</button>
+    </div>
+    <div class="transcript-body">
+      <template x-if="transcriptLines.length === 0">
+        <div class="empty-state">Loading…</div>
+      </template>
+      <template x-for="(line, i) in transcriptLines" :key="i">
+        <div class="transcript-wire"
+             :style="line.startsWith('{') ? 'color:var(--txt-m);font-style:italic' : wireColor(line)"
+             x-text="line"></div>
+      </template>
+    </div>
+  </div>
+
+</div><!-- /app -->
+
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+<script>
+document.addEventListener('alpine:init', () => {
+  Alpine.data('council', () => ({
+    // Connection
+    streaming: false,
+    paused: false,
+    _evtSource: null,
+
+    // Feed
+    messages: [],
+    buffered: [],
+    _msgKey: 0,
+
+    // Canon
+    laws: [],
+    lawsLoaded: false,
+    lawFilter: '',
+    lawTagFilter: 'all',
+    newLawIds: new Set(),
+
+    // Detail panel
+    selectedLaw: null,
+    showDetail: false,
+
+    // Transcript modal
+    showTranscript: false,
+    transcriptSession: '',
+    transcriptLines: [],
+
+    // Agent state
+    activeAgent: null,
+    agents: [
+      { name: 'herald', rgb: '59,130,246',  status: 'idle' },
+      { name: 'kronos', rgb: '139,92,246',  status: 'idle' },
+      { name: 'loom',   rgb: '16,185,129',  status: 'idle' },
+      { name: 'verity', rgb: '239,68,68',   status: 'idle' },
+      { name: 'codex',  rgb: '245,158,11',  status: 'idle' },
+    ],
+
+    // Stats
+    stats: { law_count: 0, session_count: 0, uptime_seconds: 0, current_session: null },
+    _msgTimestamps: [],
+    _startedAt: Date.now(),
+    _uptimeInterval: null,
+    _statsInterval: null,
+
+    // Computed
+    get filteredLaws() {
+      const q = this.lawFilter.toLowerCase();
+      return this.laws.filter(l => {
+        const matchText = !q || (l.law||'').toLowerCase().includes(q) || (l.mechanism||'').toLowerCase().includes(q);
+        const matchTag  = this.lawTagFilter === 'all' || (l.tags||[]).includes(this.lawTagFilter);
+        return matchText && matchTag;
+      });
+    },
+    get allTags() {
+      const s = new Set(['all']);
+      this.laws.forEach(l => (l.tags||[]).forEach(t => s.add(t)));
+      return Array.from(s);
+    },
+    get uptime() {
+      const secs = this.stats.uptime_seconds;
+      const d = Math.floor(secs / 86400);
+      const h = Math.floor((secs % 86400) / 3600);
+      const m = Math.floor((secs % 3600) / 60);
+      if (d) return `${d}d ${h}h ${m}m`;
+      if (h) return `${h}h ${m}m`;
+      return `${m}m`;
+    },
+    get msgPerMin() {
+      const cutoff = Date.now() - 60000;
+      return this._msgTimestamps.filter(t => t > cutoff).length;
+    },
+
+    // Init
+    init() {
+      this.fetchLaws();
+      this.connect();
+      this._uptimeInterval = setInterval(() => {
+        this.stats.uptime_seconds++;
+      }, 1000);
+      this._statsInterval = setInterval(() => this.fetchStats(), 30000);
+    },
+
+    async fetchLaws() {
+      try {
+        const r = await fetch('/api/laws');
+        this.laws = await r.json();
+        this.lawsLoaded = true;
+      } catch(e) {
+        this.lawsLoaded = true;
+      }
+    },
+
+    async fetchStats() {
+      try {
+        const r = await fetch('/api/stats');
+        const s = await r.json();
+        this.stats = s;
+      } catch(e) {}
+    },
+
+    connect() {
+      if (this._evtSource) this._evtSource.close();
+      this._evtSource = new EventSource('/api/stream');
+      this.streaming = false;
+
+      this._evtSource.addEventListener('zipr', e => {
+        this.streaming = true;
+        const data = JSON.parse(e.data);
+        this._onWire(data.wire, data.ts);
+      });
+      this._evtSource.addEventListener('law', e => {
+        const law = JSON.parse(e.data);
+        this._onNewLaw(law);
+      });
+      this._evtSource.addEventListener('stats', e => {
+        const s = JSON.parse(e.data);
+        this.stats = { ...this.stats, ...s };
+      });
+      this._evtSource.addEventListener('session', e => {
+        const d = JSON.parse(e.data);
+        if (d.type === 'start') this.stats.current_session = d;
+        if (d.type === 'end')   this.stats.current_session = null;
+      });
+      this._evtSource.addEventListener('heartbeat', () => {
+        this.streaming = true;
+      });
+      this._evtSource.onerror = () => {
+        this.streaming = false;
+        setTimeout(() => this.connect(), 3000);
+      };
+      this._evtSource.onopen = () => {
+        this.streaming = true;
+      };
+    },
+
+    _parseWire(wire) {
+      const m = wire.match(/^([^|]+?)(?:->|→)([^|]+)\|([a-z]+):(.*)$/s);
+      if (!m) return null;
+      const [, src, dst, type, rest] = m;
+      const parts = rest.split(';');
+      return { src: src.trim(), dst: dst.trim(), type, body: parts[0], ctx: parts.slice(1).join('; ') };
+    },
+
+    _onWire(wire, ts) {
+      this._msgTimestamps.push(Date.now());
+      if (this._msgTimestamps.length > 600) this._msgTimestamps.shift();
+
+      const parsed = this._parseWire(wire);
+      if (!parsed) return;
+
+      // Check if this is a law_codified broadcast — render as special card
+      if (parsed.type === 'b' && parsed.body.includes('law_codified')) {
+        const lawId = (parsed.body.match(/id=([^,;]+)/) || [])[1];
+        const lawText = (parsed.body.match(/law="([^"]+)"/) || [])[1] || '';
+        const conf = parseFloat((parsed.body.match(/confidence=([0-9.]+)/) || [])[1] || '0');
+        const tagsMatch = parsed.body.match(/tags=\[([^\]]*)\]/);
+        const tags = tagsMatch ? tagsMatch[1].split(',').map(t => t.trim().replace(/^"|"$/g, '')) : [];
+
+        const msg = {
+          isLawCard: true,
+          lawId, lawText, confidence: conf, tags,
+          time: new Date((ts||Date.now()/1000)*1000).toLocaleTimeString(),
+          _key: this._msgKey++,
+        };
+        if (this.paused) { this.buffered.unshift(msg); return; }
+        this.messages.unshift(msg);
+        if (this.messages.length > 500) this.messages.pop();
+        return;
+      }
+
+      const msg = {
+        ...parsed,
+        wire,
+        bodyStr: this._fmtBody(parsed.body),
+        ctxStr: parsed.ctx,
+        time: new Date((ts||Date.now()/1000)*1000).toLocaleTimeString(),
+        isLawCard: false,
+        _key: this._msgKey++,
+      };
+
+      if (this.paused) { this.buffered.unshift(msg); return; }
+
+      this.messages.unshift(msg);
+      if (this.messages.length > 500) this.messages.pop();
+
+      // Update agent orb
+      const name = parsed.src.toLowerCase();
+      const agent = this.agents.find(a => a.name === name);
+      if (agent) {
+        this.activeAgent = name;
+        const orb = document.getElementById(`orb-${name}`);
+        if (orb) { orb.classList.add('orb-flash'); setTimeout(() => orb.classList.remove('orb-flash'), 800); }
+        setTimeout(() => { if (this.activeAgent === name) this.activeAgent = null; }, 2500);
+      }
+    },
+
+    _onNewLaw(law) {
+      // Insert at top of laws array
+      const exists = this.laws.find(l => l.id === law.id);
+      if (!exists) {
+        this.laws.unshift(law);
+        this.stats.law_count = this.laws.length;
+      }
+      this.newLawIds = new Set([...this.newLawIds, law.id]);
+      setTimeout(() => {
+        const s = new Set(this.newLawIds);
+        s.delete(law.id);
+        this.newLawIds = s;
+      }, 2500);
+    },
+
+    _fmtBody(body) {
+      // Summarize lists, truncate long strings
+      return body.replace(/\[([^\]]*)\]/g, (m, inner) => {
+        const items = inner.split(',').filter(Boolean);
+        return items.length > 2 ? `[${items.length} items]` : m;
+      }).slice(0, 120) + (body.length > 120 ? '…' : '');
+    },
+
+    togglePause() {
+      this.paused = !this.paused;
+      if (!this.paused) {
+        this.buffered.reverse().forEach(m => {
+          this.messages.unshift(m);
+          if (this.messages.length > 500) this.messages.pop();
+        });
+        this.buffered = [];
+      }
+    },
+
+    openLaw(law) {
+      this.selectedLaw = law;
+      this.showDetail = true;
+    },
+
+    openLawById(id) {
+      const law = this.laws.find(l => l.id === id);
+      if (law) this.openLaw(law);
+      else fetch(`/api/laws/${id}`).then(r => r.json()).then(l => { if (l.id) this.openLaw(l); });
+    },
+
+    closeDetail() {
+      this.showDetail = false;
+      setTimeout(() => this.selectedLaw = null, 300);
+    },
+
+    async openTranscript(sessionId) {
+      if (!sessionId) return;
+      this.showTranscript = true;
+      this.transcriptSession = sessionId;
+      this.transcriptLines = [];
+      try {
+        const r = await fetch(`/api/sessions/${sessionId}`);
+        const data = await r.json();
+        this.transcriptLines = [JSON.stringify(data.summary), ...(data.wires||[])];
+      } catch(e) {
+        this.transcriptLines = ['[error loading transcript]'];
+      }
+    },
+
+    // Styling helpers
+    agentRgb(name) {
+      const map = { herald:'59,130,246', kronos:'139,92,246', loom:'16,185,129', verity:'239,68,68', codex:'245,158,11' };
+      return map[name?.toLowerCase()] || '100,116,139';
+    },
+
+    typeLabel(t) {
+      return { s:'STATE', q:'QUERY', r:'RESP', t:'TASK', b:'BCAST', e:'ERR', a:'ACK', p:'PING', c:'CAPS', x:'TERM' }[t] || t.toUpperCase();
+    },
+
+    typeBadgeStyle(t) {
+      const styles = {
+        s: 'background:#1e3a5f;color:#60a5fa;border-color:#3b82f6',
+        q: 'background:#2d1b69;color:#a78bfa;border-color:#7c3aed',
+        r: 'background:#064e3b;color:#6ee7b7;border-color:#059669',
+        t: 'background:#3b1f00;color:#fcd34d;border-color:#d97706',
+        b: 'background:#1f1035;color:#c4b5fd;border-color:#7c3aed',
+        e: 'background:#450a0a;color:#fca5a5;border-color:#dc2626',
+        a: 'background:#052e16;color:#86efac;border-color:#16a34a',
+        p: 'background:#1c2333;color:#64748b;border-color:#334155',
+      };
+      return styles[t] || 'background:#1c2333;color:#64748b;border-color:#334155';
+    },
+
+    confColor(v) {
+      if (v >= 0.75) return '#10b981';
+      if (v >= 0.55) return '#f59e0b';
+      return '#ef4444';
+    },
+
+    wireColor(line) {
+      const m = line.match(/^([^-]+)->/);
+      const src = m ? m[1].trim().toLowerCase() : '';
+      const rgb = this.agentRgb(src);
+      return `color: rgba(${rgb}, 0.8)`;
+    },
+  }));
+});
+</script>
+</body>
+</html>
