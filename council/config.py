@@ -9,8 +9,8 @@ MODEL_LOOM   = "claude-sonnet-4-6"
 MODEL_VERITY = "claude-sonnet-4-6"
 MODEL_CODEX  = "claude-haiku-4-5-20251001"
 
-# How long between council sessions (seconds). Default: 1 hour.
-SESSION_INTERVAL = int(os.environ.get("COUNCIL_INTERVAL", 3600))
+# How long between council sessions (seconds). Default: 30 minutes.
+SESSION_INTERVAL = int(os.environ.get("COUNCIL_INTERVAL", 1800))
 
 # Max time one session is allowed to run (seconds)
 SESSION_TIMEOUT = 120
