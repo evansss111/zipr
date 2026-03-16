@@ -6,651 +6,786 @@
 <title>The Eternal Council</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Crimson+Pro:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;900&family=Cinzel+Decorative:wght@400;700&family=IM+Fell+English:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://cdn.tailwindcss.com"></script>
-<script>
-tailwind.config = {
-  theme: {
-    extend: {
-      fontFamily: {
-        mono: ['"JetBrains Mono"', 'Consolas', 'monospace'],
-        serif: ['"Crimson Pro"', 'Georgia', 'serif'],
-      }
-    }
-  }
-}
-</script>
 <style>
-  :root {
-    --bg:       #080b14;
-    --s1:       #0d1117;
-    --s2:       #111827;
-    --s3:       #1c2333;
-    --border:   #1e2d40;
-    --border-h: #2a3f5a;
-    --txt:      #e2e8f0;
-    --txt-s:    #64748b;
-    --txt-m:    #334155;
-    --txt-a:    #94a3b8;
-    --amber:    #f59e0b;
+:root {
+  --stone-deep:   #0c0a07;
+  --stone-dark:   #161209;
+  --stone-mid:    #1f1a10;
+  --stone-light:  #2e2618;
+  --stone-border: #3d3120;
+  --stone-hi:     #5c4a2a;
+  --parchment:    #e8d5a8;
+  --parchment-s:  #9a8260;
+  --parchment-m:  #5a4a30;
+  --parchment-d:  #3a2e1c;
+  --gold:         #c9a84c;
+  --gold-bright:  #e8c56a;
+  --gold-dim:     #7a6030;
+  --terracotta:   #b84a2a;
+  --terra-dim:    #6b2a16;
+  --aegean:       #2b5f8c;
+  --aegean-bright:#4a8fcc;
+  --marble:       #d4cfc4;
 
-    --herald:   59, 130, 246;
-    --kronos:   139, 92, 246;
-    --loom:     16, 185, 129;
-    --verity:   239, 68, 68;
-    --codex:    245, 158, 11;
-  }
+  --herald:  74, 143, 204;
+  --kronos:  139, 108, 196;
+  --loom:    74, 170, 122;
+  --verity:  184, 74, 42;
+  --codex:   201, 168, 76;
+}
 
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  html, body {
-    height: 100%;
-    overflow: hidden;
-    background: var(--bg);
-    color: var(--txt);
-    font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
-  }
+html, body {
+  height: 100%;
+  overflow: hidden;
+  background: var(--stone-deep);
+  color: var(--parchment);
+  font-family: 'IM Fell English', Georgia, serif;
+}
 
-  ::-webkit-scrollbar { width: 4px; height: 4px; }
-  ::-webkit-scrollbar-track { background: transparent; }
-  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
-  ::-webkit-scrollbar-thumb:hover { background: var(--border-h); }
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: var(--stone-dark); }
+::-webkit-scrollbar-thumb { background: var(--stone-border); border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: var(--stone-hi); }
 
-  /* Layout */
-  .app {
-    display: grid;
-    grid-template-rows: 52px 60px 1fr;
-    height: 100dvh;
-  }
+/* ── Layout ──────────────────────────────────────────────────── */
+.app {
+  display: grid;
+  grid-template-rows: 74px 58px 1fr;
+  height: 100dvh;
+}
 
-  .main-area {
-    display: grid;
-    grid-template-columns: minmax(0, 54fr) minmax(0, 46fr);
-    overflow: hidden;
-    border-top: 1px solid var(--border);
-  }
+.main-area {
+  display: grid;
+  grid-template-columns: minmax(0, 54fr) minmax(0, 46fr);
+  overflow: hidden;
+}
 
-  .feed-panel, .canon-panel {
-    overflow-y: auto;
-    overflow-x: hidden;
-  }
+.feed-panel, .canon-panel { overflow-y: auto; overflow-x: hidden; }
 
-  /* Header */
-  .header {
-    background: var(--bg);
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 20px;
-    position: relative;
-  }
-  .header::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 1px;
-    background: linear-gradient(90deg, transparent 0%, rgba(var(--herald), 0.6) 30%, rgba(var(--codex), 0.6) 70%, transparent 100%);
-    animation: scanline 4s ease-in-out infinite;
-  }
-  @keyframes scanline {
-    0%, 100% { opacity: 0.2; }
-    50% { opacity: 0.8; }
-  }
+/* ── Greek key border utility ────────────────────────────────── */
+.greek-top {
+  border-top: 1px solid var(--gold-dim);
+  position: relative;
+}
+.greek-top::after {
+  content: '';
+  display: block;
+  height: 3px;
+  background:
+    repeating-linear-gradient(90deg,
+      var(--gold-dim) 0, var(--gold-dim) 2px,
+      transparent 2px, transparent 4px,
+      var(--gold-dim) 4px, var(--gold-dim) 6px,
+      transparent 6px, transparent 12px,
+      var(--gold-dim) 12px, var(--gold-dim) 14px,
+      transparent 14px, transparent 18px
+    );
+  opacity: 0.35;
+  margin-top: 2px;
+}
 
-  .logo {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  .logo-mark {
-    width: 28px;
-    height: 28px;
-    opacity: 0.9;
-  }
-  .logo-text {
-    font-family: 'Crimson Pro', serif;
-    font-size: 15px;
-    font-weight: 600;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--txt);
-  }
+.ornament { color: var(--gold-dim); opacity: 0.7; }
 
-  .stat-chips {
-    display: flex;
-    align-items: center;
-    gap: 0;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 11px;
-    color: var(--txt-s);
-  }
-  .stat-chip {
-    padding: 0 14px;
-    border-left: 1px solid var(--border);
-    line-height: 1;
-  }
-  .stat-chip span { color: var(--txt-a); }
-  .stat-chip .val { color: var(--txt); font-weight: 500; }
+/* ── Header ──────────────────────────────────────────────────── */
+.header {
+  background: var(--stone-dark);
+  border-bottom: 1px solid var(--stone-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  position: relative;
+}
+.header::after {
+  content: '';
+  position: absolute;
+  bottom: -1px; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(201,168,76,0.5) 25%,
+    rgba(201,168,76,0.8) 50%,
+    rgba(201,168,76,0.5) 75%,
+    transparent 100%
+  );
+  animation: aurum 5s ease-in-out infinite;
+}
+@keyframes aurum { 0%,100%{opacity:0.4} 50%{opacity:1} }
 
-  .live-dot {
-    display: inline-block;
-    width: 6px; height: 6px;
-    border-radius: 50%;
-    background: #22c55e;
-    margin-right: 6px;
-    animation: blink 1.2s step-end infinite;
-  }
-  .live-dot.off { background: var(--txt-m); animation: none; }
-  @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+.logo-wrap {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.logo-emblem {
+  width: 38px; height: 38px;
+  opacity: 0.85;
+}
+.logo-text-wrap { line-height: 1; }
+.logo-title {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--gold);
+  display: block;
+}
+.logo-sub {
+  font-family: 'Cinzel', serif;
+  font-size: 8px;
+  letter-spacing: 0.22em;
+  color: var(--parchment-m);
+  text-transform: uppercase;
+  display: block;
+  margin-top: 3px;
+}
 
-  /* Agent Status Bar */
-  .agent-bar {
-    background: var(--s1);
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    padding: 0 20px;
-    gap: 28px;
-  }
+.stat-row {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  font-family: 'Cinzel', serif;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  color: var(--parchment-m);
+}
+.stat-item {
+  padding: 0 16px;
+  border-left: 1px solid var(--stone-border);
+  text-align: center;
+  line-height: 1.3;
+}
+.stat-item:first-child { border-left: none; }
+.stat-val {
+  display: block;
+  font-family: 'Cinzel', serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--gold);
+  line-height: 1.1;
+}
+.stat-lbl {
+  display: block;
+  font-size: 8px;
+  letter-spacing: 0.18em;
+  color: var(--parchment-m);
+  text-transform: uppercase;
+}
 
-  .agent-bar-label {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 9px;
-    letter-spacing: 0.15em;
-    color: var(--txt-m);
-    text-transform: uppercase;
-    margin-right: 4px;
-    white-space: nowrap;
-  }
+.live-indicator {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'Cinzel', serif;
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  color: var(--parchment-m);
+  padding: 0 16px;
+  border-left: 1px solid var(--stone-border);
+}
+.live-flame {
+  font-size: 12px;
+  animation: flicker 2s ease-in-out infinite alternate;
+}
+.live-flame.off { animation: none; opacity: 0.3; }
+@keyframes flicker { 0%{opacity:0.6;transform:scale(0.95)} 100%{opacity:1;transform:scale(1.05)} }
 
-  .agent-orb-wrap {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    cursor: default;
-  }
-  .orb-outer {
-    position: relative;
-    width: 20px;
-    height: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .orb-ring {
-    position: absolute;
-    inset: 0;
-    border-radius: 50%;
-    border: 1.5px solid transparent;
-    transition: border-color 0.3s;
-  }
-  .orb-dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    transition: box-shadow 0.3s ease, transform 0.3s ease;
-  }
-  .orb-outer.active .orb-ring {
-    animation: spin 1.4s linear infinite;
-  }
-  .orb-outer.active .orb-dot {
-    transform: scale(1.15);
-  }
-  @keyframes spin { to { transform: rotate(360deg); } }
+/* ── Agent Bar ───────────────────────────────────────────────── */
+.agent-bar {
+  background: var(--stone-dark);
+  border-bottom: 1px solid var(--stone-border);
+  display: flex;
+  align-items: center;
+  padding: 0 24px;
+  gap: 0;
+  position: relative;
+}
+.agent-bar::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--stone-border), transparent);
+}
+.agent-bar-label {
+  font-family: 'Cinzel', serif;
+  font-size: 8px;
+  letter-spacing: 0.22em;
+  color: var(--parchment-d);
+  text-transform: uppercase;
+  margin-right: 24px;
+  white-space: nowrap;
+}
 
-  .agent-name-label {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 0.08em;
-    color: var(--txt-s);
-    text-transform: uppercase;
-    transition: color 0.3s;
-  }
-  .orb-outer.active + .agent-name-label { color: var(--txt-a); }
+.agent-seal-wrap {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 0 20px;
+  border-left: 1px solid var(--stone-border);
+}
+.agent-seal-wrap:first-of-type { border-left: none; }
 
-  .orb-flash {
-    animation: orb-flash-anim 0.8s ease-out forwards;
-  }
-  @keyframes orb-flash-anim {
-    0%   { transform: scale(1.4); }
-    100% { transform: scale(1); }
-  }
+.seal {
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  border: 1.5px solid;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Cinzel', serif;
+  font-size: 8px;
+  font-weight: 600;
+  transition: box-shadow 0.4s ease, border-color 0.4s ease;
+  position: relative;
+  flex-shrink: 0;
+}
+.seal.active {
+  animation: seal-pulse 1.6s ease-in-out infinite;
+}
+@keyframes seal-pulse {
+  0%,100% { box-shadow: 0 0 0 0 currentColor; }
+  50%      { box-shadow: 0 0 10px 3px currentColor; }
+}
+.seal-ring {
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  border: 1px solid;
+  opacity: 0;
+  transition: opacity 0.3s;
+  animation: none;
+}
+.seal.active .seal-ring {
+  opacity: 0.5;
+  animation: spin-ring 2s linear infinite;
+}
+@keyframes spin-ring { to { transform: rotate(360deg); } }
 
-  /* Panel headers */
-  .panel-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 12px 16px 10px;
-    border-bottom: 1px solid var(--border);
-    position: sticky;
-    top: 0;
-    background: var(--s1);
-    z-index: 10;
-  }
-  .panel-title {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 9px;
-    letter-spacing: 0.18em;
-    color: var(--txt-m);
-    text-transform: uppercase;
-  }
-  .panel-sub {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 9px;
-    color: var(--txt-m);
-  }
-  .btn-sm {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 9px;
-    letter-spacing: 0.1em;
-    color: var(--txt-s);
-    background: var(--s2);
-    border: 1px solid var(--border);
-    border-radius: 3px;
-    padding: 3px 8px;
-    cursor: pointer;
-    transition: all 0.15s;
-    text-transform: uppercase;
-  }
-  .btn-sm:hover { background: var(--s3); border-color: var(--border-h); color: var(--txt-a); }
-  .btn-sm.active { color: #f59e0b; border-color: rgba(245,158,11,0.4); }
+.agent-seal-name {
+  font-family: 'Cinzel', serif;
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  color: var(--parchment-m);
+  text-transform: uppercase;
+  transition: color 0.3s;
+}
 
-  /* Feed */
-  .feed-panel { background: var(--bg); }
-  .feed-list { padding: 0 0 40px; }
+.session-current {
+  margin-left: auto;
+  font-family: 'IM Fell English', serif;
+  font-style: italic;
+  font-size: 11px;
+  color: var(--parchment-m);
+  max-width: 320px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.session-current::before {
+  content: '⋯ ';
+  color: var(--gold-dim);
+}
 
-  .msg-row {
-    border-left: 2px solid transparent;
-    border-bottom: 1px solid #0a0f1a;
-    padding: 8px 16px 7px 14px;
-    cursor: pointer;
-    transition: background 0.15s;
-    animation: msg-slide-in 0.3s ease-out;
-  }
-  .msg-row:hover { background: #0d1117; }
+/* ── Panel structure ─────────────────────────────────────────── */
+.panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 18px 9px;
+  border-bottom: 1px solid var(--stone-border);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+.panel-title-text {
+  font-family: 'Cinzel', serif;
+  font-size: 9px;
+  letter-spacing: 0.22em;
+  color: var(--parchment-m);
+  text-transform: uppercase;
+}
+.panel-sub-text {
+  font-family: 'Cinzel', serif;
+  font-size: 8px;
+  color: var(--parchment-d);
+  letter-spacing: 0.1em;
+  margin-top: 2px;
+}
+.btn-classical {
+  font-family: 'Cinzel', serif;
+  font-size: 8px;
+  letter-spacing: 0.14em;
+  color: var(--parchment-m);
+  background: transparent;
+  border: 1px solid var(--stone-border);
+  border-radius: 2px;
+  padding: 3px 10px;
+  cursor: pointer;
+  text-transform: uppercase;
+  transition: all 0.15s;
+}
+.btn-classical:hover { border-color: var(--stone-hi); color: var(--gold); }
+.btn-classical.toggled { color: var(--gold); border-color: var(--gold-dim); }
 
-  @keyframes msg-slide-in {
-    from { opacity: 0; transform: translateY(-6px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
+/* ── Feed ────────────────────────────────────────────────────── */
+.feed-panel {
+  background: var(--stone-deep);
+  border-right: 1px solid var(--stone-border);
+}
+.feed-panel .panel-head { background: var(--stone-deep); }
 
-  .msg-top {
-    display: flex;
-    align-items: center;
-    gap: 7px;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 11px;
-    line-height: 1;
-    margin-bottom: 4px;
-    flex-wrap: wrap;
-  }
-  .msg-type-badge {
-    font-size: 9px;
-    font-weight: 600;
-    letter-spacing: 0.06em;
-    padding: 2px 5px;
-    border-radius: 2px;
-    border: 1px solid;
-    white-space: nowrap;
-    flex-shrink: 0;
-  }
-  .msg-arrow { color: var(--txt-m); font-size: 10px; }
-  .msg-dst { color: var(--txt-s); }
-  .msg-ts { margin-left: auto; color: var(--txt-m); font-size: 9px; flex-shrink: 0; }
+.msg-row {
+  border-left: 2px solid transparent;
+  border-bottom: 1px solid #110e08;
+  padding: 9px 18px 8px 16px;
+  cursor: default;
+  animation: msg-in 0.3s ease-out;
+  transition: background 0.15s;
+}
+.msg-row:hover { background: var(--stone-dark); }
+@keyframes msg-in {
+  from { opacity: 0; transform: translateY(-5px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
 
-  .msg-body {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 10px;
-    color: var(--txt-s);
-    padding-left: 2px;
-    line-height: 1.5;
-    word-break: break-all;
-    white-space: pre-wrap;
-  }
-  .msg-ctx {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 9px;
-    color: var(--txt-m);
-    padding-left: 2px;
-    margin-top: 2px;
-  }
+.msg-head {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 4px;
+}
 
-  /* Law codified special card in feed */
-  .law-codified-card {
-    margin: 8px 12px;
-    border: 1px solid rgba(245,158,11,0.45);
-    border-radius: 5px;
-    background: rgba(245,158,11,0.04);
-    padding: 12px 14px;
-    animation: law-codified-in 1.2s ease-out forwards;
-    cursor: pointer;
-  }
-  @keyframes law-codified-in {
-    0%   { border-color: rgba(245,158,11,0.9); box-shadow: 0 0 20px rgba(245,158,11,0.3); }
-    60%  { border-color: rgba(245,158,11,0.5); box-shadow: 0 0 8px rgba(245,158,11,0.1); }
-    100% { border-color: rgba(245,158,11,0.35); box-shadow: none; }
-  }
-  .law-codified-header {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 9px;
-    letter-spacing: 0.14em;
-    color: #f59e0b;
-    text-transform: uppercase;
-    margin-bottom: 6px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .law-codified-text {
-    font-family: 'Crimson Pro', serif;
-    font-style: italic;
-    font-size: 14px;
-    color: var(--txt);
-    line-height: 1.45;
-    margin-bottom: 8px;
-  }
+.msg-type-lbl {
+  font-family: 'Cinzel', serif;
+  font-size: 7.5px;
+  letter-spacing: 0.18em;
+  font-weight: 600;
+  text-transform: uppercase;
+  padding: 1px 0;
+  flex-shrink: 0;
+}
+.msg-src {
+  font-family: 'Cinzel', serif;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+}
+.msg-arrow {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  color: var(--parchment-d);
+}
+.msg-dst {
+  font-family: 'Cinzel', serif;
+  font-size: 9px;
+  letter-spacing: 0.06em;
+  color: var(--parchment-m);
+}
+.msg-ts {
+  margin-left: auto;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 8px;
+  color: var(--parchment-d);
+  flex-shrink: 0;
+}
+.msg-body {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9.5px;
+  color: var(--parchment-m);
+  line-height: 1.55;
+  padding-left: 2px;
+  word-break: break-all;
+}
+.msg-ctx {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 8px;
+  color: var(--parchment-d);
+  margin-top: 2px;
+  padding-left: 2px;
+}
 
-  /* Canon panel */
-  .canon-panel {
-    background: var(--s1);
-    border-left: 1px solid var(--border);
-  }
+/* Law proclaimed card in feed */
+.lex-proclamation {
+  margin: 10px 14px;
+  border: 1px solid rgba(201,168,76,0.4);
+  border-top: 2px solid rgba(201,168,76,0.7);
+  background: rgba(201,168,76,0.04);
+  padding: 14px 16px;
+  animation: lex-in 1.5s ease-out forwards;
+  cursor: pointer;
+  position: relative;
+}
+.lex-proclamation::before,
+.lex-proclamation::after {
+  content: '── ✦ ──────────────────────────────────────── ✦ ──';
+  display: block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 7px;
+  color: rgba(201,168,76,0.35);
+  letter-spacing: 0.05em;
+  overflow: hidden;
+}
+.lex-proclamation::before { margin-bottom: 8px; }
+.lex-proclamation::after  { margin-top: 10px; }
+@keyframes lex-in {
+  0%   { border-color: rgba(201,168,76,0.9); box-shadow: 0 0 24px rgba(201,168,76,0.25); }
+  50%  { border-color: rgba(201,168,76,0.5); box-shadow: 0 0 8px rgba(201,168,76,0.1); }
+  100% { border-color: rgba(201,168,76,0.4); box-shadow: none; }
+}
+.lex-header {
+  font-family: 'Cinzel', serif;
+  font-size: 8px;
+  letter-spacing: 0.22em;
+  color: var(--gold);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.lex-text {
+  font-family: 'IM Fell English', serif;
+  font-style: italic;
+  font-size: 14px;
+  color: var(--parchment);
+  line-height: 1.5;
+  margin-bottom: 9px;
+}
 
-  .filter-bar {
-    padding: 8px 12px;
-    background: var(--s1);
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    gap: 6px;
-  }
-  .filter-input {
-    flex: 1;
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: 3px;
-    color: var(--txt-a);
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 10px;
-    padding: 4px 8px;
-    outline: none;
-    transition: border-color 0.15s;
-  }
-  .filter-input:focus { border-color: var(--border-h); }
-  .filter-input::placeholder { color: var(--txt-m); }
-  .filter-select {
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: 3px;
-    color: var(--txt-s);
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 10px;
-    padding: 4px 6px;
-    outline: none;
-    cursor: pointer;
-  }
+/* ── Canon ───────────────────────────────────────────────────── */
+.canon-panel { background: var(--stone-dark); }
+.canon-panel .panel-head { background: var(--stone-dark); }
 
-  .canon-list { padding: 10px 10px 40px; }
+.filter-zone {
+  padding: 8px 14px;
+  border-bottom: 1px solid var(--stone-border);
+  background: var(--stone-dark);
+  display: flex;
+  gap: 6px;
+}
+.filter-input {
+  flex: 1;
+  background: var(--stone-deep);
+  border: 1px solid var(--stone-border);
+  border-radius: 2px;
+  color: var(--parchment-s);
+  font-family: 'IM Fell English', serif;
+  font-size: 12px;
+  padding: 4px 10px;
+  outline: none;
+  transition: border-color 0.15s;
+}
+.filter-input:focus { border-color: var(--stone-hi); }
+.filter-input::placeholder { color: var(--parchment-d); font-style: italic; }
+.filter-select {
+  background: var(--stone-deep);
+  border: 1px solid var(--stone-border);
+  border-radius: 2px;
+  color: var(--parchment-m);
+  font-family: 'Cinzel', serif;
+  font-size: 9px;
+  padding: 4px 8px;
+  outline: none;
+  cursor: pointer;
+  letter-spacing: 0.06em;
+}
 
-  .law-card {
-    border: 1px solid var(--border);
-    border-radius: 5px;
-    padding: 12px 14px;
-    margin-bottom: 7px;
-    cursor: pointer;
-    transition: background 0.15s, border-color 0.15s;
-    position: relative;
-  }
-  .law-card:hover { background: var(--s2); border-color: var(--border-h); }
-  .law-card.hi-conf { border-left: 3px solid rgba(245,158,11,0.5); }
-  .law-card.new-law { animation: law-drop-in 1.4s ease-out forwards; }
+.canon-list { padding: 10px 10px 48px; }
 
-  @keyframes law-drop-in {
-    0%   { opacity: 0; transform: translateY(-10px); border-color: rgba(245,158,11,0.8); }
-    35%  { opacity: 1; transform: translateY(0);     border-color: rgba(245,158,11,0.45); }
-    100% { border-color: var(--border); }
-  }
-  .law-card.hi-conf.new-law { animation: law-drop-in-hi 1.4s ease-out forwards; }
-  @keyframes law-drop-in-hi {
-    0%   { opacity: 0; transform: translateY(-10px); border-left-color: rgba(245,158,11,0.9); }
-    35%  { opacity: 1; transform: translateY(0);     border-left-color: rgba(245,158,11,0.7); }
-    100% { border-left-color: rgba(245,158,11,0.5); }
-  }
+/* Tablet / law card */
+.tablet {
+  border: 1px solid var(--stone-border);
+  border-top: 2px solid var(--stone-light);
+  border-radius: 2px;
+  padding: 13px 15px;
+  margin-bottom: 8px;
+  cursor: pointer;
+  transition: all 0.15s;
+  background: var(--stone-mid);
+  position: relative;
+}
+.tablet:hover {
+  border-color: var(--stone-hi);
+  border-top-color: var(--gold-dim);
+  background: var(--stone-light);
+}
+.tablet.hi-conf { border-top-color: var(--gold); }
+.tablet.new-law { animation: tablet-emerge 1.5s ease-out forwards; }
+@keyframes tablet-emerge {
+  0%   { opacity:0; transform:translateY(-8px); border-top-color:var(--gold); box-shadow:0 0 16px rgba(201,168,76,0.2); }
+  40%  { opacity:1; transform:translateY(0);    border-top-color:var(--gold); }
+  100% { border-top-color:var(--stone-light); box-shadow:none; }
+}
+.tablet.hi-conf.new-law {
+  animation: tablet-emerge-hi 1.5s ease-out forwards;
+}
+@keyframes tablet-emerge-hi {
+  0%   { opacity:0; transform:translateY(-8px); border-top-color:var(--gold-bright); box-shadow:0 0 20px rgba(232,197,106,0.3); }
+  40%  { opacity:1; transform:translateY(0);    border-top-color:var(--gold-bright); }
+  100% { border-top-color:var(--gold); box-shadow:none; }
+}
 
-  .law-card-top {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    margin-bottom: 7px;
-  }
-  .law-id {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 10px;
-    color: var(--amber);
-    font-weight: 600;
-    letter-spacing: 0.05em;
-  }
-  .law-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 3px;
-    justify-content: flex-end;
-    flex: 1;
-    margin-left: 8px;
-  }
-  .tag-pill {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 8px;
-    color: var(--txt-m);
-    background: var(--s3);
-    border: 1px solid var(--border);
-    border-radius: 2px;
-    padding: 1px 5px;
-    white-space: nowrap;
-  }
-  .law-text {
-    font-family: 'Crimson Pro', serif;
-    font-style: italic;
-    font-size: 14.5px;
-    color: var(--txt);
-    line-height: 1.45;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    margin-bottom: 9px;
-  }
-  .conf-bar-wrap {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .conf-bar {
-    flex: 1;
-    height: 3px;
-    border-radius: 2px;
-    background: var(--s3);
-    overflow: hidden;
-  }
-  .conf-bar-fill {
-    height: 100%;
-    border-radius: 2px;
-    transition: width 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
-  }
-  .conf-val {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 9px;
-    color: var(--txt-s);
-    white-space: nowrap;
-    flex-shrink: 0;
-    width: 28px;
-  }
+.tablet-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+.tablet-id {
+  font-family: 'Cinzel', serif;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  color: var(--gold);
+}
+.tablet-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px;
+  justify-content: flex-end;
+  flex: 1;
+  margin-left: 8px;
+}
+.tag {
+  font-family: 'Cinzel', serif;
+  font-size: 7px;
+  letter-spacing: 0.1em;
+  color: var(--parchment-d);
+  border: 1px solid var(--stone-border);
+  border-radius: 1px;
+  padding: 1px 5px;
+  text-transform: uppercase;
+}
+.lex-inscribed {
+  font-family: 'IM Fell English', serif;
+  font-style: italic;
+  font-size: 14px;
+  color: var(--parchment);
+  line-height: 1.45;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+.conf-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.conf-track {
+  flex: 1;
+  height: 2px;
+  background: var(--stone-border);
+  border-radius: 1px;
+  overflow: hidden;
+}
+.conf-fill {
+  height: 100%;
+  border-radius: 1px;
+  transition: width 0.9s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.conf-num {
+  font-family: 'Cinzel', serif;
+  font-size: 9px;
+  color: var(--parchment-m);
+  letter-spacing: 0.06em;
+  flex-shrink: 0;
+  width: 30px;
+  text-align: right;
+}
 
-  /* Detail panel */
-  .detail-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(8, 11, 20, 0.75);
-    z-index: 40;
-    opacity: 0;
-    transition: opacity 0.25s ease;
-    pointer-events: none;
-  }
-  .detail-overlay.open {
-    opacity: 1;
-    pointer-events: all;
-  }
+/* ── Detail Scroll ───────────────────────────────────────────── */
+.detail-veil {
+  position: fixed;
+  inset: 0;
+  background: rgba(12, 10, 7, 0.8);
+  z-index: 40;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s;
+}
+.detail-veil.open { opacity: 1; pointer-events: all; }
 
-  .detail-panel {
-    position: fixed;
-    top: 0; right: 0;
-    width: min(480px, 100vw);
-    height: 100dvh;
-    background: var(--s1);
-    border-left: 1px solid var(--border);
-    z-index: 50;
-    transform: translateX(100%);
-    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-  }
-  .detail-panel.open { transform: translateX(0); }
+.detail-scroll {
+  position: fixed;
+  top: 0; right: 0;
+  width: min(500px, 100vw);
+  height: 100dvh;
+  background: var(--stone-dark);
+  border-left: 1px solid var(--stone-border);
+  z-index: 50;
+  transform: translateX(100%);
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+.detail-scroll.open { transform: translateX(0); }
 
-  .detail-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 14px 18px;
-    border-bottom: 1px solid var(--border);
-    position: sticky;
-    top: 0;
-    background: var(--s1);
-    z-index: 1;
-  }
-  .detail-close {
-    width: 28px; height: 28px;
-    display: flex; align-items: center; justify-content: center;
-    border-radius: 4px;
-    cursor: pointer;
-    color: var(--txt-s);
-    font-size: 16px;
-    transition: background 0.15s, color 0.15s;
-  }
-  .detail-close:hover { background: var(--s3); color: var(--txt); }
+.scroll-head {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--stone-border);
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  background: var(--stone-dark);
+  z-index: 1;
+}
+.scroll-head::after {
+  content: '';
+  position: absolute;
+  bottom: -1px; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold-dim), transparent);
+}
+.close-btn {
+  width: 26px; height: 26px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  color: var(--parchment-m);
+  font-size: 14px;
+  border: 1px solid transparent;
+  border-radius: 2px;
+  transition: all 0.15s;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.close-btn:hover { border-color: var(--stone-hi); color: var(--parchment); }
 
-  .detail-body { padding: 20px 18px; flex: 1; }
-  .detail-section { margin-bottom: 22px; }
-  .detail-section-label {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 9px;
-    letter-spacing: 0.15em;
-    color: var(--txt-m);
-    text-transform: uppercase;
-    border-bottom: 1px solid var(--border);
-    padding-bottom: 5px;
-    margin-bottom: 10px;
-  }
-  .detail-law-text {
-    font-family: 'Crimson Pro', serif;
-    font-style: italic;
-    font-size: 18px;
-    line-height: 1.5;
-    color: var(--txt);
-  }
-  .detail-prose {
-    font-size: 13px;
-    color: var(--txt-s);
-    line-height: 1.6;
-  }
-  .detail-prediction {
-    font-size: 13px;
-    color: #93c5fd;
-    line-height: 1.6;
-    font-family: 'Crimson Pro', serif;
-  }
-  .detail-evidence-item {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 10px;
-    color: var(--txt-s);
-    line-height: 1.5;
-    padding: 5px 0;
-    border-bottom: 1px solid #0d1117;
-    display: flex;
-    gap: 8px;
-  }
-  .detail-evidence-item::before { content: '·'; color: var(--txt-m); flex-shrink: 0; }
-  .analogue-card {
-    border: 1px solid var(--border);
-    border-left: 3px solid rgba(var(--kronos), 0.5);
-    border-radius: 4px;
-    padding: 9px 12px;
-    margin-bottom: 6px;
-    font-size: 11px;
-  }
-  .analogue-era {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 9px;
-    color: rgba(var(--kronos), 0.8);
-    margin-bottom: 4px;
-  }
-  .analogue-text { color: var(--txt-s); line-height: 1.5; }
+.scroll-body { padding: 22px 20px; flex: 1; }
+.scroll-section { margin-bottom: 24px; }
+.scroll-label {
+  font-family: 'Cinzel', serif;
+  font-size: 7.5px;
+  letter-spacing: 0.22em;
+  color: var(--parchment-d);
+  text-transform: uppercase;
+  padding-bottom: 6px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid var(--stone-border);
+  position: relative;
+}
+.scroll-label::after {
+  content: ' ✦';
+  color: var(--gold-dim);
+  opacity: 0.5;
+}
+.scroll-lex {
+  font-family: 'IM Fell English', serif;
+  font-style: italic;
+  font-size: 18px;
+  color: var(--parchment);
+  line-height: 1.55;
+}
+.scroll-prose {
+  font-family: 'IM Fell English', serif;
+  font-size: 14px;
+  color: var(--parchment-s);
+  line-height: 1.65;
+}
+.scroll-prediction {
+  font-family: 'IM Fell English', serif;
+  font-size: 14px;
+  color: #93c5fd;
+  line-height: 1.65;
+  font-style: italic;
+}
+.evidence-entry {
+  font-family: 'IM Fell English', serif;
+  font-size: 13px;
+  color: var(--parchment-m);
+  padding: 6px 0;
+  border-bottom: 1px solid #18140c;
+  display: flex;
+  gap: 10px;
+  line-height: 1.5;
+}
+.evidence-entry::before { content: '·'; color: var(--gold-dim); flex-shrink: 0; }
+.analogue-stone {
+  border: 1px solid var(--stone-border);
+  border-left: 3px solid rgba(139,108,196,0.5);
+  padding: 9px 13px;
+  margin-bottom: 6px;
+  background: var(--stone-mid);
+}
+.analogue-era {
+  font-family: 'Cinzel', serif;
+  font-size: 8px;
+  letter-spacing: 0.14em;
+  color: rgba(139,108,196,0.8);
+  margin-bottom: 4px;
+  text-transform: uppercase;
+}
+.analogue-txt {
+  font-family: 'IM Fell English', serif;
+  font-size: 13px;
+  color: var(--parchment-m);
+  line-height: 1.5;
+}
 
-  /* Session transcript modal */
-  .transcript-modal {
-    position: fixed;
-    inset: 0;
-    z-index: 60;
-    background: rgba(5, 8, 16, 0.95);
-    display: flex;
-    flex-direction: column;
-    transform: translateY(100%);
-    transition: transform 0.3s ease;
-  }
-  .transcript-modal.open { transform: translateY(0); }
-  .transcript-header {
-    padding: 12px 18px;
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background: var(--s1);
-  }
-  .transcript-body {
-    flex: 1;
-    overflow-y: auto;
-    padding: 12px 16px;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 10px;
-    background: #050810;
-  }
-  .transcript-wire {
-    padding: 4px 0;
-    border-bottom: 1px solid #0a0d14;
-    line-height: 1.5;
-    color: var(--txt-s);
-    word-break: break-all;
-  }
+/* Transcript */
+.transcript-veil {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  background: rgba(8, 6, 4, 0.97);
+  display: flex;
+  flex-direction: column;
+  transform: translateY(100%);
+  transition: transform 0.3s ease;
+}
+.transcript-veil.open { transform: translateY(0); }
+.transcript-head {
+  padding: 12px 20px;
+  border-bottom: 1px solid var(--stone-border);
+  background: var(--stone-dark);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.transcript-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px 18px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  background: #06050302;
+}
+.tx-wire {
+  padding: 4px 0;
+  border-bottom: 1px solid #0e0b07;
+  line-height: 1.55;
+  color: var(--parchment-m);
+  word-break: break-all;
+}
 
-  /* Empty state */
-  .empty-state {
-    padding: 48px 24px;
-    text-align: center;
-    color: var(--txt-m);
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 11px;
-    line-height: 1.7;
-  }
-
-  /* Shimmer skeleton */
-  .skeleton {
-    border-radius: 4px;
-    background: linear-gradient(90deg, var(--s2) 0%, var(--s3) 50%, var(--s2) 100%);
-    background-size: 200%;
-    animation: shimmer 1.6s infinite;
-  }
-  @keyframes shimmer { from { background-position: 200% 0; } to { background-position: -200% 0; } }
+/* Empty / skeleton */
+.void {
+  padding: 52px 24px;
+  text-align: center;
+  color: var(--parchment-d);
+  font-family: 'IM Fell English', serif;
+  font-style: italic;
+  font-size: 14px;
+  line-height: 1.8;
+}
+.void-mark { font-size: 22px; opacity: 0.25; margin-bottom: 14px; }
+.skel {
+  border-radius: 2px;
+  background: linear-gradient(90deg, var(--stone-mid) 0%, var(--stone-light) 50%, var(--stone-mid) 100%);
+  background-size: 200%;
+  animation: skel-shim 1.8s infinite;
+}
+@keyframes skel-shim { from{background-position:200% 0} to{background-position:-200% 0} }
 </style>
 </head>
 
@@ -659,303 +794,305 @@ tailwind.config = {
 
   <!-- ── HEADER ─────────────────────────────────────────────────── -->
   <header class="header">
-    <div class="logo">
-      <svg class="logo-mark" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <polygon points="14,2 26,8 26,20 14,26 2,20 2,8" stroke="#f59e0b" stroke-width="1" fill="none" opacity="0.7"/>
-        <polygon points="14,7 22,11 22,18 14,22 6,18 6,11" stroke="#3b82f6" stroke-width="0.75" fill="none" opacity="0.5"/>
-        <circle cx="14" cy="14" r="2" fill="#f59e0b" opacity="0.9"/>
-        <line x1="14" y1="7" x2="14" y2="11" stroke="#64748b" stroke-width="0.5"/>
-        <line x1="14" y1="17" x2="14" y2="21" stroke="#64748b" stroke-width="0.5"/>
-        <line x1="7" y1="11" x2="12" y2="13.5" stroke="#64748b" stroke-width="0.5"/>
-        <line x1="16" y1="13.5" x2="21" y2="11" stroke="#64748b" stroke-width="0.5"/>
+    <div class="logo-wrap">
+      <!-- Ionic column emblem -->
+      <svg class="logo-emblem" viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="19" cy="7" rx="10" ry="2.5" stroke="#c9a84c" stroke-width="1" fill="none" opacity="0.8"/>
+        <line x1="12" y1="7" x2="10" y2="31" stroke="#c9a84c" stroke-width="1" opacity="0.7"/>
+        <line x1="26" y1="7" x2="28" y2="31" stroke="#c9a84c" stroke-width="1" opacity="0.7"/>
+        <line x1="9" y1="31" x2="29" y2="31" stroke="#c9a84c" stroke-width="1.5" opacity="0.8"/>
+        <line x1="6"  y1="34" x2="32" y2="34" stroke="#c9a84c" stroke-width="1.5" opacity="0.6"/>
+        <circle cx="19" cy="19" r="3" stroke="#c9a84c" stroke-width="0.75" fill="rgba(201,168,76,0.1)" opacity="0.8"/>
+        <line x1="9" y1="4.5" x2="29" y2="4.5" stroke="#c9a84c" stroke-width="0.5" opacity="0.4"/>
       </svg>
-      <span class="logo-text">The Eternal Council</span>
+      <div class="logo-text-wrap">
+        <span class="logo-title">The Eternal Council</span>
+        <span class="logo-sub">Chronicling the Laws of Human Progress</span>
+      </div>
     </div>
 
-    <div class="stat-chips">
-      <div class="stat-chip" style="border-left:none;">
-        <span class="live-dot" :class="{ off: !streaming }"></span>
-        <span x-text="streaming ? 'LIVE' : 'OFFLINE'"></span>
+    <div class="stat-row">
+      <div class="live-indicator">
+        <span class="live-flame" :class="{ off: !streaming }">🔥</span>
+        <span x-text="streaming ? 'Convened' : 'Adjourned'"></span>
       </div>
-      <div class="stat-chip">
-        <span>UPTIME </span><span class="val" x-text="uptime"></span>
+      <div class="stat-item">
+        <span class="stat-val" x-text="uptime"></span>
+        <span class="stat-lbl">In Session</span>
       </div>
-      <div class="stat-chip">
-        <span>§ </span><span class="val" x-text="stats.session_count"></span>
-        <span> sessions</span>
+      <div class="stat-item">
+        <span class="stat-val" x-text="stats.session_count"></span>
+        <span class="stat-lbl">Deliberations</span>
       </div>
-      <div class="stat-chip">
-        <span>Λ </span><span class="val" x-text="stats.law_count"></span>
-        <span> laws</span>
+      <div class="stat-item">
+        <span class="stat-val" x-text="stats.law_count"></span>
+        <span class="stat-lbl">Laws Codified</span>
       </div>
-      <div class="stat-chip">
-        <span class="val" x-text="msgPerMin"></span><span> msg/min</span>
+      <div class="stat-item">
+        <span class="stat-val" x-text="msgPerMin"></span>
+        <span class="stat-lbl">Dispatches / Min</span>
       </div>
     </div>
   </header>
 
   <!-- ── AGENT STATUS BAR ───────────────────────────────────────── -->
   <div class="agent-bar">
-    <span class="agent-bar-label">Agents</span>
+    <span class="agent-bar-label">The Five</span>
 
     <template x-for="agent in agents" :key="agent.name">
-      <div class="agent-orb-wrap" :title="agent.status">
-        <div class="orb-outer" :class="{ active: activeAgent === agent.name }">
-          <div class="orb-ring"
-               :style="`border-color: rgba(${agent.rgb}, ${activeAgent === agent.name ? 0.7 : 0})`"></div>
-          <div class="orb-dot"
-               :id="`orb-${agent.name}`"
-               :style="`background: rgba(${agent.rgb}, ${activeAgent === agent.name ? 1 : 0.3}); box-shadow: ${activeAgent === agent.name ? '0 0 10px 2px rgba('+agent.rgb+',0.5)' : 'none'}`">
-          </div>
+      <div class="agent-seal-wrap" :title="agent.status">
+        <div class="seal"
+             :id="`seal-${agent.name}`"
+             :class="{ active: activeAgent === agent.name }"
+             :style="`
+               color: rgba(${agent.rgb}, ${activeAgent === agent.name ? 1 : 0.35});
+               border-color: rgba(${agent.rgb}, ${activeAgent === agent.name ? 0.8 : 0.25});
+               box-shadow: ${activeAgent === agent.name ? '0 0 12px rgba('+agent.rgb+',0.4)' : 'none'};
+             `">
+          <span x-text="agent.initial"></span>
+          <div class="seal-ring"
+               :style="`border-color: rgba(${agent.rgb}, 0.4)`"></div>
         </div>
-        <span class="agent-name-label"
+        <span class="agent-seal-name"
               :style="activeAgent === agent.name ? `color: rgb(${agent.rgb})` : ''"
-              x-text="agent.name"></span>
+              x-text="agent.latin"></span>
       </div>
     </template>
 
-    <div style="margin-left:auto; font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--txt-m);"
-         x-show="stats.current_session">
-      <span style="color:var(--txt-s)">Session</span>
-      <span x-text="stats.current_session?.num"></span>
-      <span style="color:var(--border-h)">  ·  </span>
-      <span x-text="stats.current_session?.topic?.slice(0,50)"></span>
-    </div>
+    <div class="session-current" x-show="stats.current_session"
+         x-text="stats.current_session?.topic"></div>
   </div>
 
   <!-- ── MAIN AREA ──────────────────────────────────────────────── -->
   <div class="main-area">
 
-    <!-- Live Feed -->
+    <!-- Live Transmission Feed -->
     <div class="feed-panel">
-      <div class="panel-header" style="background:var(--bg)">
+      <div class="panel-head">
         <div>
-          <div class="panel-title">Live Protocol Feed</div>
-          <div class="panel-sub" x-text="`${messages.length} messages`" style="margin-top:2px;"></div>
+          <div class="panel-title-text">Live Transmissions</div>
+          <div class="panel-sub-text" x-text="`${messages.length} dispatches recorded`"></div>
         </div>
         <div style="display:flex;gap:6px;">
-          <button class="btn-sm" :class="{active: paused}" @click="togglePause"
-                  x-text="paused ? `▶ RESUME (${buffered.length})` : '⏸ PAUSE'"></button>
-          <button class="btn-sm" @click="messages = []">CLEAR</button>
+          <button class="btn-classical" :class="{ toggled: paused }" @click="togglePause"
+                  x-text="paused ? `Resume (${buffered.length})` : 'Pause'"></button>
+          <button class="btn-classical" @click="messages = []">Clear</button>
         </div>
       </div>
 
-      <div class="feed-list" id="feed-list">
-        <!-- Empty state -->
-        <div class="empty-state" x-show="messages.length === 0">
-          <div style="font-size:20px;margin-bottom:12px;opacity:0.3;">◈</div>
-          Waiting for the council to convene…<br>
-          <span style="color:var(--txt-m);font-size:9px;">Messages will appear here as agents communicate</span>
+      <div id="feed-list" style="padding-bottom:40px;">
+        <div class="void" x-show="messages.length === 0">
+          <div class="void-mark">◈</div>
+          The council has not yet convened.<br>
+          <span style="font-size:12px;color:var(--parchment-d);">Dispatches will appear here as the agents deliberate.</span>
         </div>
 
-        <template x-for="(msg, i) in messages" :key="msg._key">
-          <!-- Law codified special card -->
+        <template x-for="msg in messages" :key="msg._key">
+
+          <!-- Law proclamation card -->
           <template x-if="msg.isLawCard">
-            <div class="law-codified-card" @click="openLawById(msg.lawId)">
-              <div class="law-codified-header">
-                <span>✦ LAW CODIFIED</span>
+            <div class="lex-proclamation" @click="openLawById(msg.lawId)">
+              <div class="lex-header">
+                <span>Lex Aeterna</span>
                 <span x-text="msg.lawId"></span>
-                <span style="margin-left:auto;color:var(--txt-m);font-size:9px;" x-text="msg.time"></span>
+                <span style="margin-left:auto;font-size:8px;color:var(--parchment-d);" x-text="msg.time"></span>
               </div>
-              <div class="law-codified-text" x-text="msg.lawText"></div>
-              <div style="display:flex;align-items:center;gap:8px;">
-                <div class="conf-bar" style="max-width:120px;">
-                  <div class="conf-bar-fill"
+              <div class="lex-text" x-text="msg.lawText"></div>
+              <div class="conf-wrap" style="max-width:240px;">
+                <div class="conf-track" style="flex:1;">
+                  <div class="conf-fill"
                        :style="`width:${(msg.confidence||0)*100}%; background:${confColor(msg.confidence||0)}`"></div>
                 </div>
-                <span style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--txt-s);"
+                <span style="font-family:'Cinzel',serif;font-size:9px;color:var(--parchment-m);"
                       x-text="(msg.confidence||0).toFixed(2)"></span>
-                <template x-for="tag in (msg.tags||[])" :key="tag">
-                  <span class="tag-pill" x-text="tag"></span>
+                <template x-for="tag in (msg.tags||[]).slice(0,2)" :key="tag">
+                  <span class="tag" x-text="tag"></span>
                 </template>
               </div>
             </div>
           </template>
 
-          <!-- Regular ZIPR message row -->
+          <!-- Regular ZIPR dispatch -->
           <template x-if="!msg.isLawCard">
             <div class="msg-row"
-                 :style="`border-left-color: rgba(${agentRgb(msg.src)}, 0.7)`"
-                 :title="msg.wire">
-              <div class="msg-top">
-                <span class="msg-type-badge"
-                      :style="typeBadgeStyle(msg.type)"
-                      x-text="typeLabel(msg.type)"></span>
-                <span :style="`color:rgb(${agentRgb(msg.src)})`" x-text="msg.src"></span>
-                <span class="msg-arrow">──►</span>
+                 :style="`border-left-color: rgba(${agentRgb(msg.src)}, 0.65)`">
+              <div class="msg-head">
+                <span class="msg-type-lbl" :style="`color:${typeColor(msg.type)}`" x-text="typeLabel(msg.type)"></span>
+                <span class="msg-src" :style="`color:rgb(${agentRgb(msg.src)})`" x-text="msg.src?.toUpperCase()"></span>
+                <span class="msg-arrow">──▶</span>
                 <span class="msg-dst"
-                      :style="msg.dst !== '*' ? `color:rgba(${agentRgb(msg.dst)},0.7)` : 'color:#8b5cf6'"
-                      x-text="msg.dst === '*' ? '✦ ALL' : msg.dst"></span>
+                      :style="msg.dst === '*' ? 'color:rgba(201,168,76,0.8)' : `color:rgba(${agentRgb(msg.dst)},0.65)`"
+                      x-text="msg.dst === '*' ? 'OMNES' : msg.dst?.toUpperCase()"></span>
                 <span class="msg-ts" x-text="msg.time"></span>
               </div>
               <div class="msg-body" x-text="msg.bodyStr"></div>
               <div class="msg-ctx" x-show="msg.ctxStr" x-text="`⟩ ${msg.ctxStr}`"></div>
             </div>
           </template>
+
         </template>
       </div>
     </div>
 
-    <!-- Canon Panel -->
+    <!-- Canon of Laws -->
     <div class="canon-panel">
-      <div class="panel-header">
+      <div class="panel-head">
         <div>
-          <div class="panel-title">Canon of Laws</div>
-          <div class="panel-sub" x-text="`${filteredLaws.length} of ${laws.length}`" style="margin-top:2px;"></div>
+          <div class="panel-title-text">Canon of Laws</div>
+          <div class="panel-sub-text" x-text="`${filteredLaws.length} inscribed`"></div>
         </div>
         <select class="filter-select" x-model="lawTagFilter">
           <template x-for="tag in allTags" :key="tag">
-            <option :value="tag" x-text="tag === 'all' ? 'all tags' : tag"></option>
+            <option :value="tag" x-text="tag === 'all' ? 'All Domains' : tag"></option>
           </template>
         </select>
       </div>
 
-      <div class="filter-bar">
-        <input class="filter-input" type="text" x-model="lawFilter" placeholder="search laws…">
+      <div class="filter-zone">
+        <input class="filter-input" type="text" x-model="lawFilter" placeholder="Search the canon…">
       </div>
 
       <div class="canon-list">
-        <!-- Skeleton while loading -->
-        <template x-if="laws.length === 0 && !lawsLoaded">
+
+        <!-- Skeleton -->
+        <template x-if="!lawsLoaded">
           <div>
             <template x-for="i in [1,2,3]" :key="i">
-              <div class="law-card" style="pointer-events:none;">
-                <div class="skeleton" style="height:10px;width:40px;margin-bottom:10px;"></div>
-                <div class="skeleton" style="height:13px;width:100%;margin-bottom:6px;"></div>
-                <div class="skeleton" style="height:13px;width:75%;margin-bottom:12px;"></div>
-                <div class="skeleton" style="height:3px;width:100%;"></div>
+              <div class="tablet" style="pointer-events:none;">
+                <div class="skel" style="height:9px;width:44px;margin-bottom:12px;"></div>
+                <div class="skel" style="height:14px;width:100%;margin-bottom:5px;"></div>
+                <div class="skel" style="height:14px;width:68%;margin-bottom:12px;"></div>
+                <div class="skel" style="height:2px;width:100%;"></div>
               </div>
             </template>
           </div>
         </template>
 
-        <!-- Empty state after load -->
-        <div class="empty-state" x-show="lawsLoaded && laws.length === 0">
-          <div style="font-size:20px;margin-bottom:12px;opacity:0.3;">Λ</div>
-          No laws have been codified yet.<br>
-          <span style="color:var(--txt-m);font-size:9px;">The council is deliberating…</span>
+        <!-- Void state -->
+        <div class="void" x-show="lawsLoaded && laws.length === 0">
+          <div class="void-mark">Λ</div>
+          No laws have yet been codified.<br>
+          <span style="font-size:12px;">The council deliberates…</span>
         </div>
 
-        <!-- No filter match -->
-        <div class="empty-state" x-show="lawsLoaded && laws.length > 0 && filteredLaws.length === 0">
-          No laws match your filter.
+        <div class="void" x-show="lawsLoaded && laws.length > 0 && filteredLaws.length === 0">
+          No inscriptions match your search.
         </div>
 
         <template x-for="law in filteredLaws" :key="law.id">
-          <div class="law-card"
+          <div class="tablet"
                :class="{ 'hi-conf': law.confidence >= 0.75, 'new-law': newLawIds.has(law.id) }"
                @click="openLaw(law)">
-            <div class="law-card-top">
-              <span class="law-id" x-text="law.id"></span>
-              <div class="law-tags">
+            <div class="tablet-top">
+              <span class="tablet-id" x-text="law.id"></span>
+              <div class="tablet-tags">
                 <template x-for="tag in (law.tags||[]).slice(0,3)" :key="tag">
-                  <span class="tag-pill" x-text="tag"></span>
+                  <span class="tag" x-text="tag"></span>
                 </template>
               </div>
             </div>
-            <div class="law-text" x-text="law.law"></div>
-            <div class="conf-bar-wrap">
-              <div class="conf-bar">
-                <div class="conf-bar-fill"
+            <div class="lex-inscribed" x-text="law.law"></div>
+            <div class="conf-wrap">
+              <div class="conf-track">
+                <div class="conf-fill"
                      :style="`width:${(law.confidence||0)*100}%; background:${confColor(law.confidence||0)}`"></div>
               </div>
-              <span class="conf-val" x-text="(law.confidence||0).toFixed(2)"></span>
+              <span class="conf-num" x-text="(law.confidence||0).toFixed(2)"></span>
             </div>
           </div>
         </template>
+
       </div>
     </div>
-  </div><!-- /main-area -->
+  </div>
 
-  <!-- ── LAW DETAIL PANEL ───────────────────────────────────────── -->
-  <div class="detail-overlay" :class="{ open: showDetail }" @click.self="closeDetail()"></div>
+  <!-- ── LAW DETAIL SCROLL ───────────────────────────────────────── -->
+  <div class="detail-veil" :class="{ open: showDetail }" @click.self="closeDetail()"></div>
 
-  <div class="detail-panel" :class="{ open: showDetail }">
+  <div class="detail-scroll" :class="{ open: showDetail }">
     <template x-if="selectedLaw">
-      <div style="display:contents;">
-        <div class="detail-header">
+      <div style="display:contents">
+        <div class="scroll-head">
           <div>
-            <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--amber);font-weight:600;"
+            <div style="font-family:'Cinzel',serif;font-size:12px;font-weight:600;letter-spacing:0.1em;color:var(--gold);"
                  x-text="selectedLaw.id"></div>
-            <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--txt-m);margin-top:2px;"
+            <div style="font-family:'Cinzel',serif;font-size:8px;color:var(--parchment-d);margin-top:3px;letter-spacing:0.12em;"
                  x-text="selectedLaw.codified_at?.slice(0,10)"></div>
           </div>
-          <button class="detail-close" @click="closeDetail()">✕</button>
+          <button class="close-btn" @click="closeDetail()">✕</button>
         </div>
 
-        <div class="detail-body">
+        <div class="scroll-body">
 
-          <div class="detail-section">
-            <div class="detail-section-label">The Law</div>
-            <div class="detail-law-text" x-text="selectedLaw.law"></div>
+          <div class="scroll-section">
+            <div class="scroll-label">Lex</div>
+            <div class="scroll-lex" x-text="selectedLaw.law"></div>
           </div>
 
-          <div class="detail-section">
-            <div class="detail-section-label">Mechanism</div>
-            <div class="detail-prose" x-text="selectedLaw.mechanism"></div>
+          <div class="scroll-section">
+            <div class="scroll-label">Mechanism</div>
+            <div class="scroll-prose" x-text="selectedLaw.mechanism"></div>
           </div>
 
-          <div class="detail-section">
-            <div class="detail-section-label">Prediction</div>
-            <div class="detail-prediction" x-text="selectedLaw.prediction"></div>
+          <div class="scroll-section">
+            <div class="scroll-label">Prophecy</div>
+            <div class="scroll-prediction" x-text="selectedLaw.prediction"></div>
           </div>
 
-          <div class="detail-section">
-            <div class="detail-section-label">Confidence</div>
-            <div style="display:flex;align-items:center;gap:10px;">
-              <div class="conf-bar" style="flex:1;">
-                <div class="conf-bar-fill"
-                     :style="`width:${(selectedLaw.confidence||0)*100}%; background:${confColor(selectedLaw.confidence||0)}`"></div>
+          <div class="scroll-section">
+            <div class="scroll-label">Confidence</div>
+            <div style="display:flex;align-items:center;gap:12px;">
+              <div class="conf-track" style="flex:1;">
+                <div class="conf-fill" :style="`width:${(selectedLaw.confidence||0)*100}%; background:${confColor(selectedLaw.confidence||0)}`"></div>
               </div>
-              <span style="font-family:'JetBrains Mono',monospace;font-size:11px;"
+              <span style="font-family:'Cinzel',serif;font-size:13px;font-weight:600;"
                     :style="`color:${confColor(selectedLaw.confidence||0)}`"
                     x-text="(selectedLaw.confidence||0).toFixed(2)"></span>
             </div>
           </div>
 
-          <div class="detail-section" x-show="(selectedLaw.tags||[]).length">
-            <div class="detail-section-label">Tags</div>
+          <div class="scroll-section" x-show="(selectedLaw.tags||[]).length">
+            <div class="scroll-label">Domains</div>
             <div style="display:flex;flex-wrap:wrap;gap:5px;">
               <template x-for="tag in selectedLaw.tags||[]" :key="tag">
-                <span class="tag-pill" style="font-size:10px;padding:3px 8px;" x-text="tag"></span>
+                <span class="tag" style="font-size:9px;padding:3px 9px;" x-text="tag"></span>
               </template>
             </div>
           </div>
 
-          <div class="detail-section" x-show="(selectedLaw.evidence||[]).length">
-            <div class="detail-section-label">Evidence</div>
-            <template x-for="(ev, i) in selectedLaw.evidence||[]" :key="i">
-              <div class="detail-evidence-item" x-text="ev"></div>
+          <div class="scroll-section" x-show="(selectedLaw.evidence||[]).length">
+            <div class="scroll-label">Evidence</div>
+            <template x-for="(ev,i) in selectedLaw.evidence||[]" :key="i">
+              <div class="evidence-entry" x-text="ev"></div>
             </template>
           </div>
 
-          <div class="detail-section" x-show="(selectedLaw.analogues||[]).length">
-            <div class="detail-section-label">Historical Analogues · Kronos</div>
-            <template x-for="(a, i) in selectedLaw.analogues||[]" :key="i">
-              <div class="analogue-card" x-show="a">
-                <div class="analogue-era" x-text="typeof a === 'object' ? `[${a.era||''}] ${a.domain||''}` : ''"></div>
-                <div class="analogue-text"
-                     x-text="typeof a === 'object' ? (a.structural_echo || a.pattern || a) : a"></div>
+          <div class="scroll-section" x-show="(selectedLaw.analogues||[]).length">
+            <div class="scroll-label">Historical Echo · Kronos</div>
+            <template x-for="(a,i) in selectedLaw.analogues||[]" :key="i">
+              <div class="analogue-stone" x-show="a">
+                <div class="analogue-era" x-text="typeof a==='object' ? `${a.era||''} · ${a.domain||''}` : ''"></div>
+                <div class="analogue-txt" x-text="typeof a==='object' ? (a.structural_echo||a.pattern||a) : a"></div>
               </div>
             </template>
           </div>
 
-          <div class="detail-section" x-show="(selectedLaw.signals||[]).length">
-            <div class="detail-section-label">Signals · Herald</div>
-            <template x-for="(s, i) in selectedLaw.signals||[]" :key="i">
-              <div class="detail-evidence-item" x-text="typeof s === 'object' ? (s.signal||s.title||s) : s"></div>
+          <div class="scroll-section" x-show="(selectedLaw.signals||[]).length">
+            <div class="scroll-label">Signals · Herald</div>
+            <template x-for="(s,i) in selectedLaw.signals||[]" :key="i">
+              <div class="evidence-entry" x-text="typeof s==='object'?(s.signal||s.title||s):s"></div>
             </template>
           </div>
 
-          <div class="detail-section">
-            <div class="detail-section-label">Session</div>
+          <div class="scroll-section">
+            <div class="scroll-label">Session Record</div>
             <div style="display:flex;align-items:center;justify-content:space-between;">
-              <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--txt-s);"
+              <span style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.08em;color:var(--parchment-m);"
                     x-text="selectedLaw.session"></span>
-              <button class="btn-sm" @click="openTranscript(selectedLaw.session)">view log →</button>
+              <button class="btn-classical" @click="openTranscript(selectedLaw.session)">View Transcript</button>
             </div>
-            <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--txt-m);margin-top:4px;"
-                 x-text="`topic: ${selectedLaw.topic||''}`"></div>
+            <div style="font-family:'IM Fell English',serif;font-size:12px;color:var(--parchment-d);margin-top:5px;font-style:italic;"
+                 x-text="selectedLaw.topic"></div>
           </div>
 
         </div>
@@ -963,83 +1100,66 @@ tailwind.config = {
     </template>
   </div>
 
-  <!-- ── SESSION TRANSCRIPT MODAL ───────────────────────────────── -->
-  <div class="transcript-modal" :class="{ open: showTranscript }">
-    <div class="transcript-header">
-      <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--txt-a);">
-        SESSION TRANSCRIPT
-        <span style="color:var(--txt-m);margin-left:8px;" x-text="transcriptSession"></span>
+  <!-- ── TRANSCRIPT ─────────────────────────────────────────────── -->
+  <div class="transcript-veil" :class="{ open: showTranscript }">
+    <div class="transcript-head">
+      <div>
+        <div style="font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.18em;color:var(--parchment-m);">Session Transcript</div>
+        <div style="font-family:'Cinzel',serif;font-size:8px;color:var(--parchment-d);margin-top:2px;letter-spacing:0.1em;"
+             x-text="transcriptSession"></div>
       </div>
-      <button class="detail-close" @click="showTranscript=false">✕</button>
+      <button class="close-btn" @click="showTranscript=false">✕</button>
     </div>
     <div class="transcript-body">
-      <template x-if="transcriptLines.length === 0">
-        <div class="empty-state">Loading…</div>
-      </template>
-      <template x-for="(line, i) in transcriptLines" :key="i">
-        <div class="transcript-wire"
-             :style="line.startsWith('{') ? 'color:var(--txt-m);font-style:italic' : wireColor(line)"
+      <div class="void" x-show="transcriptLines.length === 0">Loading…</div>
+      <template x-for="(line,i) in transcriptLines" :key="i">
+        <div class="tx-wire"
+             :style="line.startsWith('{') ? 'color:var(--parchment-d);font-style:italic' : wireColor(line)"
              x-text="line"></div>
       </template>
     </div>
   </div>
 
-</div><!-- /app -->
+</div>
 
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 <script>
 document.addEventListener('alpine:init', () => {
   Alpine.data('council', () => ({
-    // Connection
     streaming: false,
     paused: false,
     _evtSource: null,
-
-    // Feed
     messages: [],
     buffered: [],
     _msgKey: 0,
-
-    // Canon
     laws: [],
     lawsLoaded: false,
     lawFilter: '',
     lawTagFilter: 'all',
     newLawIds: new Set(),
-
-    // Detail panel
     selectedLaw: null,
     showDetail: false,
-
-    // Transcript modal
     showTranscript: false,
     transcriptSession: '',
     transcriptLines: [],
-
-    // Agent state
     activeAgent: null,
     agents: [
-      { name: 'herald', rgb: '59,130,246',  status: 'idle' },
-      { name: 'kronos', rgb: '139,92,246',  status: 'idle' },
-      { name: 'loom',   rgb: '16,185,129',  status: 'idle' },
-      { name: 'verity', rgb: '239,68,68',   status: 'idle' },
-      { name: 'codex',  rgb: '245,158,11',  status: 'idle' },
+      { name: 'herald', latin: 'Mercurius', initial: 'M', rgb: '74,143,204',  status: 'idle' },
+      { name: 'kronos', latin: 'Kronos',    initial: 'K', rgb: '139,108,196', status: 'idle' },
+      { name: 'loom',   latin: 'Textor',    initial: 'T', rgb: '74,170,122',  status: 'idle' },
+      { name: 'verity', latin: 'Veritas',   initial: 'V', rgb: '184,74,42',   status: 'idle' },
+      { name: 'codex',  latin: 'Codex',     initial: 'C', rgb: '201,168,76',  status: 'idle' },
     ],
+    stats: { law_count:0, session_count:0, uptime_seconds:0, current_session:null },
+    _msgTs: [],
+    _uptimeTimer: null,
 
-    // Stats
-    stats: { law_count: 0, session_count: 0, uptime_seconds: 0, current_session: null },
-    _msgTimestamps: [],
-    _startedAt: Date.now(),
-    _uptimeInterval: null,
-    _statsInterval: null,
-
-    // Computed
     get filteredLaws() {
       const q = this.lawFilter.toLowerCase();
       return this.laws.filter(l => {
-        const matchText = !q || (l.law||'').toLowerCase().includes(q) || (l.mechanism||'').toLowerCase().includes(q);
-        const matchTag  = this.lawTagFilter === 'all' || (l.tags||[]).includes(this.lawTagFilter);
-        return matchText && matchTag;
+        const t = !q || (l.law||'').toLowerCase().includes(q) || (l.mechanism||'').toLowerCase().includes(q);
+        const g = this.lawTagFilter==='all' || (l.tags||[]).includes(this.lawTagFilter);
+        return t && g;
       });
     },
     get allTags() {
@@ -1048,242 +1168,138 @@ document.addEventListener('alpine:init', () => {
       return Array.from(s);
     },
     get uptime() {
-      const secs = this.stats.uptime_seconds;
-      const d = Math.floor(secs / 86400);
-      const h = Math.floor((secs % 86400) / 3600);
-      const m = Math.floor((secs % 3600) / 60);
-      if (d) return `${d}d ${h}h ${m}m`;
-      if (h) return `${h}h ${m}m`;
+      const n = this.stats.uptime_seconds;
+      const d=Math.floor(n/86400), h=Math.floor((n%86400)/3600), m=Math.floor((n%3600)/60);
+      if(d) return `${d}d ${h}h`;
+      if(h) return `${h}h ${m}m`;
       return `${m}m`;
     },
     get msgPerMin() {
-      const cutoff = Date.now() - 60000;
-      return this._msgTimestamps.filter(t => t > cutoff).length;
+      const c = Date.now()-60000;
+      return this._msgTs.filter(t=>t>c).length;
     },
 
-    // Init
     init() {
       this.fetchLaws();
       this.connect();
-      this._uptimeInterval = setInterval(() => {
-        this.stats.uptime_seconds++;
-      }, 1000);
-      this._statsInterval = setInterval(() => this.fetchStats(), 30000);
+      this._uptimeTimer = setInterval(()=>{ this.stats.uptime_seconds++; }, 1000);
+      setInterval(()=>this.fetchStats(), 30000);
     },
 
     async fetchLaws() {
-      try {
-        const r = await fetch('/api/laws');
-        this.laws = await r.json();
-        this.lawsLoaded = true;
-      } catch(e) {
-        this.lawsLoaded = true;
-      }
+      try { this.laws = await (await fetch('/api/laws')).json(); } catch(e){}
+      this.lawsLoaded = true;
     },
-
     async fetchStats() {
-      try {
-        const r = await fetch('/api/stats');
-        const s = await r.json();
-        this.stats = s;
-      } catch(e) {}
+      try { this.stats = await (await fetch('/api/stats')).json(); } catch(e){}
     },
 
     connect() {
-      if (this._evtSource) this._evtSource.close();
+      if(this._evtSource) this._evtSource.close();
       this._evtSource = new EventSource('/api/stream');
-      this.streaming = false;
-
-      this._evtSource.addEventListener('zipr', e => {
-        this.streaming = true;
-        const data = JSON.parse(e.data);
-        this._onWire(data.wire, data.ts);
-      });
-      this._evtSource.addEventListener('law', e => {
-        const law = JSON.parse(e.data);
-        this._onNewLaw(law);
-      });
-      this._evtSource.addEventListener('stats', e => {
-        const s = JSON.parse(e.data);
-        this.stats = { ...this.stats, ...s };
-      });
-      this._evtSource.addEventListener('session', e => {
-        const d = JSON.parse(e.data);
-        if (d.type === 'start') this.stats.current_session = d;
-        if (d.type === 'end')   this.stats.current_session = null;
-      });
-      this._evtSource.addEventListener('heartbeat', () => {
-        this.streaming = true;
-      });
-      this._evtSource.onerror = () => {
-        this.streaming = false;
-        setTimeout(() => this.connect(), 3000);
-      };
-      this._evtSource.onopen = () => {
-        this.streaming = true;
-      };
+      this._evtSource.addEventListener('zipr',    e => { this.streaming=true; const d=JSON.parse(e.data); this._onWire(d.wire,d.ts); });
+      this._evtSource.addEventListener('law',     e => this._onNewLaw(JSON.parse(e.data)));
+      this._evtSource.addEventListener('stats',   e => { this.stats={...this.stats,...JSON.parse(e.data)}; });
+      this._evtSource.addEventListener('session', e => { const d=JSON.parse(e.data); if(d.type==='start') this.stats.current_session=d; if(d.type==='end') this.stats.current_session=null; });
+      this._evtSource.addEventListener('heartbeat', () => { this.streaming=true; });
+      this._evtSource.onerror = () => { this.streaming=false; setTimeout(()=>this.connect(),3000); };
+      this._evtSource.onopen  = () => { this.streaming=true; };
     },
 
     _parseWire(wire) {
       const m = wire.match(/^([^|]+?)(?:->|→)([^|]+)\|([a-z]+):(.*)$/s);
-      if (!m) return null;
-      const [, src, dst, type, rest] = m;
-      const parts = rest.split(';');
-      return { src: src.trim(), dst: dst.trim(), type, body: parts[0], ctx: parts.slice(1).join('; ') };
+      if(!m) return null;
+      const [,src,dst,type,rest]=m, parts=rest.split(';');
+      return { src:src.trim(), dst:dst.trim(), type, body:parts[0], ctx:parts.slice(1).join('; ') };
     },
 
     _onWire(wire, ts) {
-      this._msgTimestamps.push(Date.now());
-      if (this._msgTimestamps.length > 600) this._msgTimestamps.shift();
+      this._msgTs.push(Date.now());
+      if(this._msgTs.length>600) this._msgTs.shift();
+      const p = this._parseWire(wire);
+      if(!p) return;
+      const time = new Date((ts||Date.now()/1000)*1000).toLocaleTimeString();
 
-      const parsed = this._parseWire(wire);
-      if (!parsed) return;
-
-      // Check if this is a law_codified broadcast — render as special card
-      if (parsed.type === 'b' && parsed.body.includes('law_codified')) {
-        const lawId = (parsed.body.match(/id=([^,;]+)/) || [])[1];
-        const lawText = (parsed.body.match(/law="([^"]+)"/) || [])[1] || '';
-        const conf = parseFloat((parsed.body.match(/confidence=([0-9.]+)/) || [])[1] || '0');
-        const tagsMatch = parsed.body.match(/tags=\[([^\]]*)\]/);
-        const tags = tagsMatch ? tagsMatch[1].split(',').map(t => t.trim().replace(/^"|"$/g, '')) : [];
-
-        const msg = {
-          isLawCard: true,
-          lawId, lawText, confidence: conf, tags,
-          time: new Date((ts||Date.now()/1000)*1000).toLocaleTimeString(),
-          _key: this._msgKey++,
-        };
-        if (this.paused) { this.buffered.unshift(msg); return; }
+      if(p.type==='b' && p.body.includes('law_codified')) {
+        const lawId  = (p.body.match(/id=([^,;]+)/)||[])[1];
+        const lawText= (p.body.match(/law="([^"]+)"/) ||[])[1]||'';
+        const conf   = parseFloat((p.body.match(/confidence=([0-9.]+)/)||[])[1]||'0');
+        const tm     = p.body.match(/tags=\[([^\]]*)\]/);
+        const tags   = tm ? tm[1].split(',').map(t=>t.trim().replace(/^"|"$/g,'')) : [];
+        const msg    = { isLawCard:true, lawId, lawText, confidence:conf, tags, time, _key:this._msgKey++ };
+        if(this.paused){this.buffered.unshift(msg);return;}
         this.messages.unshift(msg);
-        if (this.messages.length > 500) this.messages.pop();
+        if(this.messages.length>500) this.messages.pop();
         return;
       }
 
-      const msg = {
-        ...parsed,
-        wire,
-        bodyStr: this._fmtBody(parsed.body),
-        ctxStr: parsed.ctx,
-        time: new Date((ts||Date.now()/1000)*1000).toLocaleTimeString(),
-        isLawCard: false,
-        _key: this._msgKey++,
-      };
-
-      if (this.paused) { this.buffered.unshift(msg); return; }
-
+      const msg = { ...p, wire, bodyStr:this._fmtBody(p.body), ctxStr:p.ctx, time, isLawCard:false, _key:this._msgKey++ };
+      if(this.paused){this.buffered.unshift(msg);return;}
       this.messages.unshift(msg);
-      if (this.messages.length > 500) this.messages.pop();
+      if(this.messages.length>500) this.messages.pop();
 
-      // Update agent orb
-      const name = parsed.src.toLowerCase();
-      const agent = this.agents.find(a => a.name === name);
-      if (agent) {
+      const name = p.src?.toLowerCase();
+      if(this.agents.find(a=>a.name===name)) {
         this.activeAgent = name;
-        const orb = document.getElementById(`orb-${name}`);
-        if (orb) { orb.classList.add('orb-flash'); setTimeout(() => orb.classList.remove('orb-flash'), 800); }
-        setTimeout(() => { if (this.activeAgent === name) this.activeAgent = null; }, 2500);
+        const el = document.getElementById(`seal-${name}`);
+        if(el) { el.style.transform='scale(1.3)'; setTimeout(()=>{el.style.transform='scale(1)';},400); }
+        setTimeout(()=>{ if(this.activeAgent===name) this.activeAgent=null; }, 2500);
       }
     },
 
     _onNewLaw(law) {
-      // Insert at top of laws array
-      const exists = this.laws.find(l => l.id === law.id);
-      if (!exists) {
+      if(!this.laws.find(l=>l.id===law.id)) {
         this.laws.unshift(law);
         this.stats.law_count = this.laws.length;
       }
       this.newLawIds = new Set([...this.newLawIds, law.id]);
-      setTimeout(() => {
-        const s = new Set(this.newLawIds);
-        s.delete(law.id);
-        this.newLawIds = s;
-      }, 2500);
+      setTimeout(()=>{ const s=new Set(this.newLawIds); s.delete(law.id); this.newLawIds=s; }, 2500);
     },
 
     _fmtBody(body) {
-      // Summarize lists, truncate long strings
-      return body.replace(/\[([^\]]*)\]/g, (m, inner) => {
-        const items = inner.split(',').filter(Boolean);
-        return items.length > 2 ? `[${items.length} items]` : m;
-      }).slice(0, 120) + (body.length > 120 ? '…' : '');
+      return body
+        .replace(/\[([^\]]*)\]/g,(m,inner)=>{const items=inner.split(',').filter(Boolean);return items.length>2?`[${items.length} items]`:m;})
+        .slice(0,130) + (body.length>130?'…':'');
     },
 
     togglePause() {
-      this.paused = !this.paused;
-      if (!this.paused) {
-        this.buffered.reverse().forEach(m => {
-          this.messages.unshift(m);
-          if (this.messages.length > 500) this.messages.pop();
-        });
-        this.buffered = [];
+      this.paused=!this.paused;
+      if(!this.paused) {
+        [...this.buffered].reverse().forEach(m=>{this.messages.unshift(m);if(this.messages.length>500)this.messages.pop();});
+        this.buffered=[];
       }
     },
 
-    openLaw(law) {
-      this.selectedLaw = law;
-      this.showDetail = true;
-    },
+    openLaw(law)        { this.selectedLaw=law; this.showDetail=true; },
+    closeDetail()       { this.showDetail=false; setTimeout(()=>this.selectedLaw=null,350); },
+    openLawById(id)     { const l=this.laws.find(l=>l.id===id); if(l) this.openLaw(l); else fetch(`/api/laws/${id}`).then(r=>r.json()).then(l=>{if(l.id)this.openLaw(l);}); },
 
-    openLawById(id) {
-      const law = this.laws.find(l => l.id === id);
-      if (law) this.openLaw(law);
-      else fetch(`/api/laws/${id}`).then(r => r.json()).then(l => { if (l.id) this.openLaw(l); });
-    },
-
-    closeDetail() {
-      this.showDetail = false;
-      setTimeout(() => this.selectedLaw = null, 300);
-    },
-
-    async openTranscript(sessionId) {
-      if (!sessionId) return;
-      this.showTranscript = true;
-      this.transcriptSession = sessionId;
-      this.transcriptLines = [];
+    async openTranscript(sid) {
+      if(!sid) return;
+      this.showTranscript=true; this.transcriptSession=sid; this.transcriptLines=[];
       try {
-        const r = await fetch(`/api/sessions/${sessionId}`);
-        const data = await r.json();
-        this.transcriptLines = [JSON.stringify(data.summary), ...(data.wires||[])];
-      } catch(e) {
-        this.transcriptLines = ['[error loading transcript]'];
-      }
+        const d = await (await fetch(`/api/sessions/${sid}`)).json();
+        this.transcriptLines=[JSON.stringify(d.summary),...(d.wires||[])];
+      } catch(e){ this.transcriptLines=['[error loading transcript]']; }
     },
 
-    // Styling helpers
     agentRgb(name) {
-      const map = { herald:'59,130,246', kronos:'139,92,246', loom:'16,185,129', verity:'239,68,68', codex:'245,158,11' };
-      return map[name?.toLowerCase()] || '100,116,139';
+      return { herald:'74,143,204', kronos:'139,108,196', loom:'74,170,122', verity:'184,74,42', codex:'201,168,76' }[name?.toLowerCase()] || '90,74,48';
     },
-
     typeLabel(t) {
-      return { s:'STATE', q:'QUERY', r:'RESP', t:'TASK', b:'BCAST', e:'ERR', a:'ACK', p:'PING', c:'CAPS', x:'TERM' }[t] || t.toUpperCase();
+      return { s:'Signum', q:'Quaestio', r:'Responsum', t:'Mandatum', b:'Edictum', e:'Erratum', a:'Acceptum', p:'Pulsus', c:'Capaces', x:'Terminus' }[t] || t.toUpperCase();
     },
-
-    typeBadgeStyle(t) {
-      const styles = {
-        s: 'background:#1e3a5f;color:#60a5fa;border-color:#3b82f6',
-        q: 'background:#2d1b69;color:#a78bfa;border-color:#7c3aed',
-        r: 'background:#064e3b;color:#6ee7b7;border-color:#059669',
-        t: 'background:#3b1f00;color:#fcd34d;border-color:#d97706',
-        b: 'background:#1f1035;color:#c4b5fd;border-color:#7c3aed',
-        e: 'background:#450a0a;color:#fca5a5;border-color:#dc2626',
-        a: 'background:#052e16;color:#86efac;border-color:#16a34a',
-        p: 'background:#1c2333;color:#64748b;border-color:#334155',
-      };
-      return styles[t] || 'background:#1c2333;color:#64748b;border-color:#334155';
+    typeColor(t) {
+      return { s:'#4a8fcc', q:'#8b6cc4', r:'#4aaa7a', t:'#c9a84c', b:'#c9a84c', e:'#b84a2a', a:'#4aaa7a', p:'#5a4a30' }[t] || 'var(--parchment-m)';
     },
-
     confColor(v) {
-      if (v >= 0.75) return '#10b981';
-      if (v >= 0.55) return '#f59e0b';
-      return '#ef4444';
+      if(v>=0.75) return '#4aaa7a';
+      if(v>=0.55) return '#c9a84c';
+      return '#b84a2a';
     },
-
     wireColor(line) {
-      const m = line.match(/^([^-]+)->/);
-      const src = m ? m[1].trim().toLowerCase() : '';
-      const rgb = this.agentRgb(src);
-      return `color: rgba(${rgb}, 0.8)`;
+      const m=line.match(/^([^-]+)->/);
+      return `color: rgba(${this.agentRgb(m?m[1].trim().toLowerCase():'')}, 0.75)`;
     },
   }));
 });
