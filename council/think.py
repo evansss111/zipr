@@ -27,25 +27,43 @@ def _get_client() -> anthropic.Anthropic:
     return _client
 
 
-def _extract_json(text: str) -> dict:
+def _extract_json(text: str) -> dict | None:
     """Extract the first JSON object from a string, even if surrounded by prose."""
-    # Try direct parse first
+    text = text.strip()
+
+    # Strip markdown code fences
+    text = re.sub(r"^```(?:json)?\s*", "", text)
+    text = re.sub(r"\s*```$", "", text)
+    text = text.strip()
+
+    # Direct parse
     try:
-        return json.loads(text.strip())
+        result = json.loads(text)
+        if isinstance(result, dict):
+            return result
     except json.JSONDecodeError:
         pass
 
-    # Try to find a JSON block
-    m = re.search(r"\{[\s\S]+\}", text)
-    if m:
-        try:
-            return json.loads(m.group(0))
-        except json.JSONDecodeError:
-            pass
+    # Find the outermost { ... } block (handles prose before/after)
+    start = text.find("{")
+    if start != -1:
+        depth = 0
+        for i, c in enumerate(text[start:], start):
+            if c == "{":
+                depth += 1
+            elif c == "}":
+                depth -= 1
+                if depth == 0:
+                    candidate = text[start:i + 1]
+                    try:
+                        result = json.loads(candidate)
+                        if isinstance(result, dict):
+                            return result
+                    except json.JSONDecodeError:
+                        pass
+                    break
 
-    # Last resort: return raw text wrapped in a dict
-    log.warning("Could not parse JSON from response, wrapping raw text")
-    return {"raw": text.strip()}
+    return None
 
 
 async def think(
@@ -55,7 +73,11 @@ async def think(
     model: str = "claude-haiku-4-5-20251001",
     max_tokens: int = 600,
 ) -> dict:
-    """Call Claude and return parsed JSON dict. Runs in executor to avoid blocking."""
+    """
+    Call Claude and return parsed JSON dict.
+    Uses a prefilled assistant turn ('{') to force JSON output.
+    Runs in executor to avoid blocking the event loop.
+    """
     loop = asyncio.get_running_loop()
 
     def _call() -> dict:
@@ -64,10 +86,19 @@ async def think(
             model=model,
             max_tokens=max_tokens,
             system=system,
-            messages=[{"role": "user", "content": prompt}],
+            messages=[
+                {"role": "user",      "content": prompt},
+                {"role": "assistant", "content": "{"},   # force JSON open
+            ],
         )
-        text = resp.content[0].text.strip()
-        log.debug("Raw LLM response: %s", text[:200])
-        return _extract_json(text)
+        # The response continues from '{', so prepend it back
+        text = "{" + resp.content[0].text.strip()
+        log.debug("Raw response: %.200s", text)
+
+        result = _extract_json(text)
+        if result is None:
+            log.warning("JSON parse failed, raw: %.300s", text)
+            return {"raw": text}
+        return result
 
     return await loop.run_in_executor(None, _call)
