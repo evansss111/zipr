@@ -10,30 +10,38 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
 :root {
-  --stone-deep:   #0c0a07;
-  --stone-dark:   #161209;
-  --stone-mid:    #1f1a10;
-  --stone-light:  #2e2618;
-  --stone-border: #3d3120;
-  --stone-hi:     #5c4a2a;
-  --parchment:    #e8d5a8;
-  --parchment-s:  #9a8260;
-  --parchment-m:  #5a4a30;
-  --parchment-d:  #3a2e1c;
-  --gold:         #c9a84c;
-  --gold-bright:  #e8c56a;
-  --gold-dim:     #7a6030;
-  --terracotta:   #b84a2a;
-  --terra-dim:    #6b2a16;
-  --aegean:       #2b5f8c;
-  --aegean-bright:#4a8fcc;
-  --marble:       #d4cfc4;
+  --marble:       #b8b0a4;
+  --marble-2:     #aea69a;
+  --marble-3:     #a49c90;
+  --marble-4:     #9a9286;
+  --border:       #8a8278;
+  --border-hi:    #706860;
+  --ink:          #1a140c;
+  --ink-s:        #3a3028;
+  --ink-m:        #5a5048;
+  --ink-d:        #7a7068;
+  --gold:         #8a5c08;
+  --gold-bright:  #b07810;
+  --gold-pale:    #d4b060;
+  --terra:        #9a3018;
+  --terra-bright: #c04020;
+  --terra-pale:   #d49080;
+  --aegean:       #163a78;
+  --aegean-mid:   #1e4e98;
+  --aegean-pale:  #7898c8;
+  --laurel:       #1e5030;
+  --laurel-pale:  #80aa90;
+  --purple:       #4a1268;
+  --purple-pale:  #9878b8;
 
-  --herald:  74, 143, 204;
-  --kronos:  139, 108, 196;
-  --loom:    74, 170, 122;
-  --verity:  184, 74, 42;
-  --codex:   201, 168, 76;
+  --gold-dim:    #c4a050;
+  --terracotta:  #b84a2a;
+
+  --herald:  22, 78, 152;
+  --kronos:  74, 18, 104;
+  --loom:    30, 80, 48;
+  --verity:  154, 48, 24;
+  --codex:   138, 92, 8;
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -41,15 +49,15 @@
 html, body {
   height: 100%;
   overflow: hidden;
-  background: var(--stone-deep);
-  color: var(--parchment);
+  background: var(--marble);
+  color: var(--ink);
   font-family: 'IM Fell English', Georgia, serif;
 }
 
 ::-webkit-scrollbar { width: 5px; }
-::-webkit-scrollbar-track { background: var(--stone-dark); }
-::-webkit-scrollbar-thumb { background: var(--stone-border); border-radius: 2px; }
-::-webkit-scrollbar-thumb:hover { background: var(--stone-hi); }
+::-webkit-scrollbar-track { background: var(--marble-2); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: var(--border-hi); }
 
 /* ── Layout ──────────────────────────────────────────────────── */
 .app {
@@ -68,7 +76,7 @@ html, body {
 
 /* ── Greek key border utility ────────────────────────────────── */
 .greek-top {
-  border-top: 1px solid var(--gold-dim);
+  border-top: 1px solid var(--border);
   position: relative;
 }
 .greek-top::after {
@@ -77,44 +85,47 @@ html, body {
   height: 3px;
   background:
     repeating-linear-gradient(90deg,
-      var(--gold-dim) 0, var(--gold-dim) 2px,
+      var(--gold) 0, var(--gold) 2px,
       transparent 2px, transparent 4px,
-      var(--gold-dim) 4px, var(--gold-dim) 6px,
+      var(--gold) 4px, var(--gold) 6px,
       transparent 6px, transparent 12px,
-      var(--gold-dim) 12px, var(--gold-dim) 14px,
+      var(--gold) 12px, var(--gold) 14px,
       transparent 14px, transparent 18px
     );
-  opacity: 0.35;
+  opacity: 0.3;
   margin-top: 2px;
 }
 
-.ornament { color: var(--gold-dim); opacity: 0.7; }
+.ornament { color: var(--gold); opacity: 0.6; }
 
 /* ── Header ──────────────────────────────────────────────────── */
 .header {
-  background: var(--stone-dark);
-  border-bottom: 1px solid var(--stone-border);
+  background: linear-gradient(180deg, var(--marble-2) 0%, var(--marble) 100%);
+  border-bottom: 2px solid var(--border);
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 0 24px;
   position: relative;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+}
+.header::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--terra) 0%, var(--gold) 40%, var(--aegean) 70%, var(--terra) 100%);
+  opacity: 0.7;
 }
 .header::after {
   content: '';
   position: absolute;
-  bottom: -1px; left: 0; right: 0;
+  bottom: -1px; left: 10%; right: 10%;
   height: 1px;
-  background: linear-gradient(90deg,
-    transparent 0%,
-    rgba(201,168,76,0.5) 25%,
-    rgba(201,168,76,0.8) 50%,
-    rgba(201,168,76,0.5) 75%,
-    transparent 100%
-  );
-  animation: aurum 5s ease-in-out infinite;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  animation: aurum 4s ease-in-out infinite;
 }
-@keyframes aurum { 0%,100%{opacity:0.4} 50%{opacity:1} }
+@keyframes aurum { 0%,100%{opacity:0.3} 50%{opacity:0.9} }
 
 .logo-wrap {
   display: flex;
@@ -131,14 +142,14 @@ html, body {
   font-size: 13px;
   font-weight: 700;
   letter-spacing: 0.12em;
-  color: var(--gold);
+  color: var(--ink);
   display: block;
 }
 .logo-sub {
   font-family: 'Cinzel', serif;
   font-size: 8px;
   letter-spacing: 0.22em;
-  color: var(--parchment-m);
+  color: var(--ink-s);
   text-transform: uppercase;
   display: block;
   margin-top: 3px;
@@ -151,11 +162,11 @@ html, body {
   font-family: 'Cinzel', serif;
   font-size: 10px;
   letter-spacing: 0.08em;
-  color: var(--parchment-m);
+  color: var(--ink-s);
 }
 .stat-item {
   padding: 0 16px;
-  border-left: 1px solid var(--stone-border);
+  border-left: 1px solid var(--border);
   text-align: center;
   line-height: 1.3;
 }
@@ -172,7 +183,7 @@ html, body {
   display: block;
   font-size: 8px;
   letter-spacing: 0.18em;
-  color: var(--parchment-m);
+  color: var(--ink-m);
   text-transform: uppercase;
 }
 
@@ -183,9 +194,9 @@ html, body {
   font-family: 'Cinzel', serif;
   font-size: 9px;
   letter-spacing: 0.18em;
-  color: var(--parchment-m);
+  color: var(--ink-s);
   padding: 0 16px;
-  border-left: 1px solid var(--stone-border);
+  border-left: 1px solid var(--border);
 }
 .live-flame {
   font-size: 12px;
@@ -196,26 +207,19 @@ html, body {
 
 /* ── Agent Bar ───────────────────────────────────────────────── */
 .agent-bar {
-  background: var(--stone-dark);
-  border-bottom: 1px solid var(--stone-border);
+  background: var(--marble-2);
+  border-bottom: 1px solid var(--border);
   display: flex;
   align-items: center;
   padding: 0 24px;
   gap: 0;
   position: relative;
 }
-.agent-bar::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, var(--stone-border), transparent);
-}
 .agent-bar-label {
   font-family: 'Cinzel', serif;
   font-size: 8px;
   letter-spacing: 0.22em;
-  color: var(--parchment-d);
+  color: var(--ink-m);
   text-transform: uppercase;
   margin-right: 24px;
   white-space: nowrap;
@@ -226,7 +230,7 @@ html, body {
   align-items: center;
   gap: 9px;
   padding: 0 20px;
-  border-left: 1px solid var(--stone-border);
+  border-left: 1px solid var(--border);
 }
 .agent-seal-wrap:first-of-type { border-left: none; }
 
@@ -270,7 +274,7 @@ html, body {
   font-family: 'Cinzel', serif;
   font-size: 9px;
   letter-spacing: 0.12em;
-  color: var(--parchment-m);
+  color: var(--ink-s);
   text-transform: uppercase;
   transition: color 0.3s;
 }
@@ -280,7 +284,7 @@ html, body {
   font-family: 'IM Fell English', serif;
   font-style: italic;
   font-size: 11px;
-  color: var(--parchment-m);
+  color: var(--ink-s);
   max-width: 320px;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -288,7 +292,8 @@ html, body {
 }
 .session-current::before {
   content: '⋯ ';
-  color: var(--gold-dim);
+  color: var(--gold);
+  opacity: 0.6;
 }
 
 /* ── Panel structure ─────────────────────────────────────────── */
@@ -297,7 +302,7 @@ html, body {
   align-items: center;
   justify-content: space-between;
   padding: 10px 18px 9px;
-  border-bottom: 1px solid var(--stone-border);
+  border-bottom: 1px solid var(--border);
   position: sticky;
   top: 0;
   z-index: 10;
@@ -306,13 +311,13 @@ html, body {
   font-family: 'Cinzel', serif;
   font-size: 9px;
   letter-spacing: 0.22em;
-  color: var(--parchment-m);
+  color: var(--ink-s);
   text-transform: uppercase;
 }
 .panel-sub-text {
   font-family: 'Cinzel', serif;
   font-size: 8px;
-  color: var(--parchment-d);
+  color: var(--ink-m);
   letter-spacing: 0.1em;
   margin-top: 2px;
 }
@@ -320,24 +325,24 @@ html, body {
   font-family: 'Cinzel', serif;
   font-size: 8px;
   letter-spacing: 0.14em;
-  color: var(--parchment-m);
+  color: var(--ink-s);
   background: transparent;
-  border: 1px solid var(--stone-border);
+  border: 1px solid var(--border);
   border-radius: 2px;
   padding: 3px 10px;
   cursor: pointer;
   text-transform: uppercase;
   transition: all 0.15s;
 }
-.btn-classical:hover { border-color: var(--stone-hi); color: var(--gold); }
-.btn-classical.toggled { color: var(--gold); border-color: var(--gold-dim); }
+.btn-classical:hover { border-color: var(--border-hi); color: var(--gold); background: var(--marble-3); }
+.btn-classical.toggled { color: var(--gold); border-color: var(--gold); }
 
 /* ── Feed ────────────────────────────────────────────────────── */
 .feed-panel {
-  background: var(--stone-deep);
-  border-right: 1px solid var(--stone-border);
+  background: var(--marble-3);
+  border-right: 1px solid var(--border);
 }
-.feed-panel .panel-head { background: var(--stone-deep); }
+.feed-panel .panel-head { background: var(--marble-3); }
 
 .msg-row {
   border-left: 2px solid transparent;
@@ -347,7 +352,7 @@ html, body {
   animation: msg-in 0.3s ease-out;
   transition: background 0.15s;
 }
-.msg-row:hover { background: var(--stone-dark); }
+.msg-row:hover { background: var(--marble-2); }
 @keyframes msg-in {
   from { opacity: 0; transform: translateY(-5px); }
   to   { opacity: 1; transform: translateY(0); }
@@ -379,25 +384,25 @@ html, body {
 .msg-arrow {
   font-family: 'JetBrains Mono', monospace;
   font-size: 9px;
-  color: var(--parchment-d);
+  color: var(--ink-d);
 }
 .msg-dst {
   font-family: 'Cinzel', serif;
   font-size: 9px;
   letter-spacing: 0.06em;
-  color: var(--parchment-m);
+  color: var(--ink-m);
 }
 .msg-ts {
   margin-left: auto;
   font-family: 'JetBrains Mono', monospace;
   font-size: 8px;
-  color: var(--parchment-d);
+  color: var(--ink-d);
   flex-shrink: 0;
 }
 .msg-body {
   font-family: 'JetBrains Mono', monospace;
   font-size: 9.5px;
-  color: var(--parchment-m);
+  color: var(--ink-m);
   line-height: 1.55;
   padding-left: 2px;
   word-break: break-all;
@@ -405,7 +410,7 @@ html, body {
 .msg-ctx {
   font-family: 'JetBrains Mono', monospace;
   font-size: 8px;
-  color: var(--parchment-d);
+  color: var(--ink-d);
   margin-top: 2px;
   padding-left: 2px;
 }
@@ -453,41 +458,41 @@ html, body {
   font-family: 'IM Fell English', serif;
   font-style: italic;
   font-size: 14px;
-  color: var(--parchment);
+  color: var(--ink);
   line-height: 1.5;
   margin-bottom: 9px;
 }
 
 /* ── Canon ───────────────────────────────────────────────────── */
-.canon-panel { background: var(--stone-dark); }
-.canon-panel .panel-head { background: var(--stone-dark); }
+.canon-panel { background: var(--marble-2); }
+.canon-panel .panel-head { background: var(--marble-2); }
 
 .filter-zone {
   padding: 8px 14px;
-  border-bottom: 1px solid var(--stone-border);
-  background: var(--stone-dark);
+  border-bottom: 1px solid var(--border);
+  background: var(--marble-2);
   display: flex;
   gap: 6px;
 }
 .filter-input {
   flex: 1;
-  background: var(--stone-deep);
-  border: 1px solid var(--stone-border);
+  background: var(--marble-3);
+  border: 1px solid var(--border);
   border-radius: 2px;
-  color: var(--parchment-s);
+  color: var(--ink-s);
   font-family: 'IM Fell English', serif;
   font-size: 12px;
   padding: 4px 10px;
   outline: none;
   transition: border-color 0.15s;
 }
-.filter-input:focus { border-color: var(--stone-hi); }
-.filter-input::placeholder { color: var(--parchment-d); font-style: italic; }
+.filter-input:focus { border-color: var(--border-hi); }
+.filter-input::placeholder { color: var(--ink-d); font-style: italic; }
 .filter-select {
-  background: var(--stone-deep);
-  border: 1px solid var(--stone-border);
+  background: var(--marble-3);
+  border: 1px solid var(--border);
   border-radius: 2px;
-  color: var(--parchment-m);
+  color: var(--ink-m);
   font-family: 'Cinzel', serif;
   font-size: 9px;
   padding: 4px 8px;
@@ -500,27 +505,27 @@ html, body {
 
 /* Tablet / law card */
 .tablet {
-  border: 1px solid var(--stone-border);
-  border-top: 2px solid var(--stone-light);
+  border: 1px solid var(--border);
+  border-top: 2px solid var(--marble-4);
   border-radius: 2px;
   padding: 13px 15px;
   margin-bottom: 8px;
   cursor: pointer;
   transition: all 0.15s;
-  background: var(--stone-mid);
+  background: var(--marble-3);
   position: relative;
 }
 .tablet:hover {
-  border-color: var(--stone-hi);
+  border-color: var(--border-hi);
   border-top-color: var(--gold-dim);
-  background: var(--stone-light);
+  background: var(--marble-4);
 }
 .tablet.hi-conf { border-top-color: var(--gold); }
 .tablet.new-law { animation: tablet-emerge 1.5s ease-out forwards; }
 @keyframes tablet-emerge {
   0%   { opacity:0; transform:translateY(-8px); border-top-color:var(--gold); box-shadow:0 0 16px rgba(201,168,76,0.2); }
   40%  { opacity:1; transform:translateY(0);    border-top-color:var(--gold); }
-  100% { border-top-color:var(--stone-light); box-shadow:none; }
+  100% { border-top-color:var(--marble-4); box-shadow:none; }
 }
 .tablet.hi-conf.new-law {
   animation: tablet-emerge-hi 1.5s ease-out forwards;
@@ -556,8 +561,8 @@ html, body {
   font-family: 'Cinzel', serif;
   font-size: 7px;
   letter-spacing: 0.1em;
-  color: var(--parchment-d);
-  border: 1px solid var(--stone-border);
+  color: var(--ink-d);
+  border: 1px solid var(--border);
   border-radius: 1px;
   padding: 1px 5px;
   text-transform: uppercase;
@@ -566,7 +571,7 @@ html, body {
   font-family: 'IM Fell English', serif;
   font-style: italic;
   font-size: 14px;
-  color: var(--parchment);
+  color: var(--ink);
   line-height: 1.45;
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -582,7 +587,7 @@ html, body {
 .conf-track {
   flex: 1;
   height: 2px;
-  background: var(--stone-border);
+  background: var(--border);
   border-radius: 1px;
   overflow: hidden;
 }
@@ -594,7 +599,7 @@ html, body {
 .conf-num {
   font-family: 'Cinzel', serif;
   font-size: 9px;
-  color: var(--parchment-m);
+  color: var(--ink-m);
   letter-spacing: 0.06em;
   flex-shrink: 0;
   width: 30px;
@@ -607,15 +612,15 @@ html, body {
   font-size: 8.5px;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--parchment-d);
+  color: var(--ink-d);
   background: transparent;
   border: none;
   padding: 5px 12px;
   cursor: pointer;
   transition: all 0.15s;
 }
-.tab-btn:hover { color: var(--parchment-m); background: var(--stone-light); }
-.tab-btn.active { color: var(--gold); background: var(--stone-light); }
+.tab-btn:hover { color: var(--ink-m); background: var(--marble-4); }
+.tab-btn.active { color: var(--gold); background: var(--marble-4); }
 
 /* Rejected tablet */
 .rejected-tablet {
@@ -662,8 +667,8 @@ html, body {
   top: 0; right: 0;
   width: min(500px, 100vw);
   height: 100dvh;
-  background: var(--stone-dark);
-  border-left: 1px solid var(--stone-border);
+  background: var(--marble-2);
+  border-left: 1px solid var(--border);
   z-index: 50;
   transform: translateX(100%);
   transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
@@ -675,13 +680,13 @@ html, body {
 
 .scroll-head {
   padding: 16px 20px;
-  border-bottom: 1px solid var(--stone-border);
+  border-bottom: 1px solid var(--border);
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
   position: sticky;
   top: 0;
-  background: var(--stone-dark);
+  background: var(--marble-2);
   z-index: 1;
 }
 .scroll-head::after {
@@ -695,7 +700,7 @@ html, body {
   width: 26px; height: 26px;
   display: flex; align-items: center; justify-content: center;
   cursor: pointer;
-  color: var(--parchment-m);
+  color: var(--ink-m);
   font-size: 14px;
   border: 1px solid transparent;
   border-radius: 2px;
@@ -703,7 +708,7 @@ html, body {
   flex-shrink: 0;
   margin-top: 2px;
 }
-.close-btn:hover { border-color: var(--stone-hi); color: var(--parchment); }
+.close-btn:hover { border-color: var(--border-hi); color: var(--ink); }
 
 .scroll-body { padding: 22px 20px; flex: 1; }
 .scroll-section { margin-bottom: 24px; }
@@ -711,11 +716,11 @@ html, body {
   font-family: 'Cinzel', serif;
   font-size: 7.5px;
   letter-spacing: 0.22em;
-  color: var(--parchment-d);
+  color: var(--ink-d);
   text-transform: uppercase;
   padding-bottom: 6px;
   margin-bottom: 10px;
-  border-bottom: 1px solid var(--stone-border);
+  border-bottom: 1px solid var(--border);
   position: relative;
 }
 .scroll-label::after {
@@ -727,13 +732,13 @@ html, body {
   font-family: 'IM Fell English', serif;
   font-style: italic;
   font-size: 18px;
-  color: var(--parchment);
+  color: var(--ink);
   line-height: 1.55;
 }
 .scroll-prose {
   font-family: 'IM Fell English', serif;
   font-size: 14px;
-  color: var(--parchment-s);
+  color: var(--ink-s);
   line-height: 1.65;
 }
 .scroll-prediction {
@@ -746,7 +751,7 @@ html, body {
 .evidence-entry {
   font-family: 'IM Fell English', serif;
   font-size: 13px;
-  color: var(--parchment-m);
+  color: var(--ink-m);
   padding: 6px 0;
   border-bottom: 1px solid #18140c;
   display: flex;
@@ -755,11 +760,11 @@ html, body {
 }
 .evidence-entry::before { content: '·'; color: var(--gold-dim); flex-shrink: 0; }
 .analogue-stone {
-  border: 1px solid var(--stone-border);
+  border: 1px solid var(--border);
   border-left: 3px solid rgba(139,108,196,0.5);
   padding: 9px 13px;
   margin-bottom: 6px;
-  background: var(--stone-mid);
+  background: var(--marble-3);
 }
 .analogue-era {
   font-family: 'Cinzel', serif;
@@ -772,7 +777,7 @@ html, body {
 .analogue-txt {
   font-family: 'IM Fell English', serif;
   font-size: 13px;
-  color: var(--parchment-m);
+  color: var(--ink-m);
   line-height: 1.5;
 }
 
@@ -790,8 +795,8 @@ html, body {
 .transcript-veil.open { transform: translateY(0); }
 .transcript-head {
   padding: 12px 20px;
-  border-bottom: 1px solid var(--stone-border);
-  background: var(--stone-dark);
+  border-bottom: 1px solid var(--border);
+  background: var(--marble-2);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -808,7 +813,7 @@ html, body {
   padding: 4px 0;
   border-bottom: 1px solid #0e0b07;
   line-height: 1.55;
-  color: var(--parchment-m);
+  color: var(--ink-m);
   word-break: break-all;
 }
 
@@ -816,7 +821,7 @@ html, body {
 .void {
   padding: 52px 24px;
   text-align: center;
-  color: var(--parchment-d);
+  color: var(--ink-d);
   font-family: 'IM Fell English', serif;
   font-style: italic;
   font-size: 14px;
@@ -825,7 +830,7 @@ html, body {
 .void-mark { font-size: 22px; opacity: 0.25; margin-bottom: 14px; }
 .skel {
   border-radius: 2px;
-  background: linear-gradient(90deg, var(--stone-mid) 0%, var(--stone-light) 50%, var(--stone-mid) 100%);
+  background: linear-gradient(90deg, var(--marble-3) 0%, var(--marble-4) 50%, var(--marble-3) 100%);
   background-size: 200%;
   animation: skel-shim 1.8s infinite;
 }
@@ -928,7 +933,7 @@ html, body {
         <div class="void" x-show="messages.length === 0">
           <div class="void-mark">◈</div>
           The council has not yet convened.<br>
-          <span style="font-size:12px;color:var(--parchment-d);">Dispatches will appear here as the agents deliberate.</span>
+          <span style="font-size:12px;color:var(--ink-d);">Dispatches will appear here as the agents deliberate.</span>
         </div>
 
         <template x-for="msg in messages" :key="msg._key">
@@ -939,7 +944,7 @@ html, body {
               <div class="lex-header">
                 <span>Lex Aeterna</span>
                 <span x-text="msg.lawId"></span>
-                <span style="margin-left:auto;font-size:8px;color:var(--parchment-d);" x-text="msg.time"></span>
+                <span style="margin-left:auto;font-size:8px;color:var(--ink-d);" x-text="msg.time"></span>
               </div>
               <div class="lex-text" x-text="msg.lawText"></div>
               <div class="conf-wrap" style="max-width:240px;">
@@ -947,7 +952,7 @@ html, body {
                   <div class="conf-fill"
                        :style="`width:${(msg.confidence||0)*100}%; background:${confColor(msg.confidence||0)}`"></div>
                 </div>
-                <span style="font-family:'Cinzel',serif;font-size:9px;color:var(--parchment-m);"
+                <span style="font-family:'Cinzel',serif;font-size:9px;color:var(--ink-m);"
                       x-text="(msg.confidence||0).toFixed(2)"></span>
                 <template x-for="tag in (msg.tags||[]).slice(0,2)" :key="tag">
                   <span class="tag" x-text="tag"></span>
@@ -981,12 +986,12 @@ html, body {
     <!-- Canon of Laws -->
     <div class="canon-panel">
       <div class="panel-head">
-        <div style="display:flex;gap:0;border:1px solid var(--stone-border);border-radius:2px;overflow:hidden;">
+        <div style="display:flex;gap:0;border:1px solid var(--border);border-radius:2px;overflow:hidden;">
           <button class="tab-btn" :class="{active: canonTab==='canon'}" @click="canonTab='canon'">
             Canon <span x-text="laws.length ? `(${laws.length})` : ''"></span>
           </button>
           <button class="tab-btn" :class="{active: canonTab==='rejected'}" @click="canonTab='rejected'"
-                  style="border-left:1px solid var(--stone-border);">
+                  style="border-left:1px solid var(--border);">
             Rejected <span x-text="rejected.length ? `(${rejected.length})` : ''"></span>
           </button>
         </div>
@@ -1069,7 +1074,7 @@ html, body {
               <span class="tablet-id" style="color:var(--terracotta);" x-text="law.rejected_id"></span>
               <span class="rejected-badge" x-text="law.stage === 'verity' ? 'Verity' : 'Threshold'"></span>
             </div>
-            <div class="lex-inscribed" style="color:var(--parchment-s);text-decoration:line-through;text-decoration-color:rgba(184,74,42,0.4);"
+            <div class="lex-inscribed" style="color:var(--ink-s);text-decoration:line-through;text-decoration-color:rgba(184,74,42,0.4);"
                  x-text="law.law"></div>
             <div class="rejection-reason" x-show="law.verdict_reason" x-text="law.verdict_reason"></div>
             <div class="conf-wrap" style="margin-top:8px;">
@@ -1094,10 +1099,16 @@ html, body {
       <div style="display:contents">
         <div class="scroll-head">
           <div>
-            <div style="font-family:'Cinzel',serif;font-size:12px;font-weight:600;letter-spacing:0.1em;color:var(--gold);"
-                 x-text="selectedLaw.id"></div>
-            <div style="font-family:'Cinzel',serif;font-size:8px;color:var(--parchment-d);margin-top:3px;letter-spacing:0.12em;"
-                 x-text="selectedLaw.codified_at?.slice(0,10)"></div>
+            <div style="display:flex;align-items:center;gap:8px;">
+              <span style="font-family:'Cinzel',serif;font-size:12px;font-weight:600;letter-spacing:0.1em;color:var(--gold);"
+                    x-text="selectedLaw.id || selectedLaw.rejected_id"></span>
+              <span x-show="selectedLaw.rejected_id"
+                    style="font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.14em;color:var(--terra);border:1px solid rgba(154,48,24,0.4);padding:1px 6px;border-radius:1px;text-transform:uppercase;">
+                Rejected
+              </span>
+            </div>
+            <div style="font-family:'Cinzel',serif;font-size:8px;color:var(--ink-m);margin-top:3px;letter-spacing:0.12em;"
+                 x-text="(selectedLaw.codified_at || selectedLaw.rejected_at || '').slice(0,10)"></div>
           </div>
           <button class="close-btn" @click="closeDetail()">✕</button>
         </div>
@@ -1164,14 +1175,27 @@ html, body {
             </template>
           </div>
 
+          <div class="scroll-section" x-show="selectedLaw.verdict_reason">
+            <div class="scroll-label" style="color:var(--terra);">Veritas Ruled</div>
+            <div style="font-family:'IM Fell English',serif;font-style:italic;font-size:14px;color:var(--terra);line-height:1.6;border-left:3px solid rgba(154,48,24,0.3);padding-left:10px;"
+                 x-text="selectedLaw.verdict_reason"></div>
+          </div>
+
+          <div class="scroll-section" x-show="(selectedLaw.counterexamples||[]).length">
+            <div class="scroll-label" style="color:var(--terra);">Counterexamples</div>
+            <template x-for="(ex,i) in selectedLaw.counterexamples||[]" :key="i">
+              <div class="evidence-entry" style="color:var(--terra);border-bottom-color:rgba(154,48,24,0.15);" x-text="ex"></div>
+            </template>
+          </div>
+
           <div class="scroll-section">
             <div class="scroll-label">Session Record</div>
             <div style="display:flex;align-items:center;justify-content:space-between;">
-              <span style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.08em;color:var(--parchment-m);"
+              <span style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.08em;color:var(--ink-m);"
                     x-text="selectedLaw.session"></span>
               <button class="btn-classical" @click="openTranscript(selectedLaw.session)">View Transcript</button>
             </div>
-            <div style="font-family:'IM Fell English',serif;font-size:12px;color:var(--parchment-d);margin-top:5px;font-style:italic;"
+            <div style="font-family:'IM Fell English',serif;font-size:12px;color:var(--ink-d);margin-top:5px;font-style:italic;"
                  x-text="selectedLaw.topic"></div>
           </div>
 
@@ -1184,8 +1208,8 @@ html, body {
   <div class="transcript-veil" :class="{ open: showTranscript }">
     <div class="transcript-head">
       <div>
-        <div style="font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.18em;color:var(--parchment-m);">Session Transcript</div>
-        <div style="font-family:'Cinzel',serif;font-size:8px;color:var(--parchment-d);margin-top:2px;letter-spacing:0.1em;"
+        <div style="font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.18em;color:var(--ink-m);">Session Transcript</div>
+        <div style="font-family:'Cinzel',serif;font-size:8px;color:var(--ink-d);margin-top:2px;letter-spacing:0.1em;"
              x-text="transcriptSession"></div>
       </div>
       <button class="close-btn" @click="showTranscript=false">✕</button>
@@ -1194,7 +1218,7 @@ html, body {
       <div class="void" x-show="transcriptLines.length === 0">Loading…</div>
       <template x-for="(line,i) in transcriptLines" :key="i">
         <div class="tx-wire"
-             :style="line.startsWith('{') ? 'color:var(--parchment-d);font-style:italic' : wireColor(line)"
+             :style="line.startsWith('{') ? 'color:var(--ink-d);font-style:italic' : wireColor(line)"
              x-text="line"></div>
       </template>
     </div>
@@ -1389,7 +1413,7 @@ document.addEventListener('alpine:init', () => {
       return { s:'Signum', q:'Quaestio', r:'Responsum', t:'Mandatum', b:'Edictum', e:'Erratum', a:'Acceptum', p:'Pulsus', c:'Capaces', x:'Terminus' }[t] || t.toUpperCase();
     },
     typeColor(t) {
-      return { s:'#4a8fcc', q:'#8b6cc4', r:'#4aaa7a', t:'#c9a84c', b:'#c9a84c', e:'#b84a2a', a:'#4aaa7a', p:'#5a4a30' }[t] || 'var(--parchment-m)';
+      return { s:'#4a8fcc', q:'#8b6cc4', r:'#4aaa7a', t:'#c9a84c', b:'#c9a84c', e:'#b84a2a', a:'#4aaa7a', p:'#5a4a30' }[t] || 'var(--ink-m)';
     },
     confColor(v) {
       if(v>=0.75) return '#4aaa7a';
